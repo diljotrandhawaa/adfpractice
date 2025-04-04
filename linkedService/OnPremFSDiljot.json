@@ -1,0 +1,17 @@
+{
+	"name": "OnPremFSDiljot",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "FileServer",
+		"typeProperties": {
+			"host": "C:\\TDP training\\Azure\\Datasets\\Excel Files",
+			"userId": "desktop-ek3ut3e\\diljot",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiI5MjBkZGFiNS02YjQ2LTQwZjMtOTU5YS0yMWRlMThhMDM5ZGIiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "IntegrationRuntimeFS",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}

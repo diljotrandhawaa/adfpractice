@@ -1,0 +1,27 @@
+{
+	"name": "RandomFilesToDel_OP",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "OnPremFS_desktop",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"fileName": {
+				"type": "String"
+			}
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "FileServerLocation",
+				"fileName": {
+					"value": "@concat(dataset().fileName, '.png')",
+					"type": "Expression"
+				},
+				"folderPath": "Files to del ADF"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

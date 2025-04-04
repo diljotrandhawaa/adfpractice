@@ -1,0 +1,21 @@
+{
+	"name": "OnPremSQLServerDiljot",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "SqlServer",
+		"typeProperties": {
+			"server": "DESKTOP-EK3UT3E",
+			"database": "V44_SSIS",
+			"encrypt": "optional",
+			"trustServerCertificate": true,
+			"authenticationType": "SQL",
+			"userName": "diljotadminOP",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiJhMWNkYmY3MC00MzE2LTRlOWMtOTk4ZS1mMDA0ZTkxY2E4YzMiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "IntegrationRuntimeFS",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}

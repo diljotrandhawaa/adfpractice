@@ -1,0 +1,6 @@
+{
+	"name": "IntegrationRuntimeFS",
+	"properties": {
+		"type": "SelfHosted"
+	}
+}

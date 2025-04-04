@@ -15,6 +15,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzureBlobStorage2'"
 		},
+		"Azure_bulkCopy_SQLDB_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'Azure_bulkCopy_SQLDB'"
+		},
 		"LogFiles_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'LogFiles'"
@@ -30,6 +34,18 @@
 		"OnPremSQLServerDiljot_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'OnPremSQLServerDiljot'"
+		},
+		"Azure_bulkCopy_SQLDB_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "diljotsqlserver.database.windows.net"
+		},
+		"Azure_bulkCopy_SQLDB_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "bulkCopySQL_DB"
+		},
+		"Azure_bulkCopy_SQLDB_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "diljotadmin"
 		},
 		"OnPremFSDiljot_properties_typeProperties_host": {
 			"type": "string",
@@ -58,17 +74,6 @@
 		"OnPremSQLServerDiljot_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "diljotadminOP"
-		},
-		"IntegrationRuntimeAzureSSIS_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint": {
-			"type": "string",
-			"defaultValue": "diljotsqlserver.database.windows.net"
-		},
-		"IntegrationRuntimeAzureSSIS_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminUserName": {
-			"type": "string",
-			"defaultValue": "diljotadmin"
-		},
-		"IntegrationRuntimeAzureSSIS_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
-			"type": "secureString"
 		},
 		"containerUri": {
 			"type": "string",
@@ -103,6 +108,9 @@
 					"AzureBlobStorage2_connectionString": {
 						"value": "[parameters('AzureBlobStorage2_connectionString')]"
 					},
+					"Azure_bulkCopy_SQLDB_password": {
+						"value": "[parameters('Azure_bulkCopy_SQLDB_password')]"
+					},
 					"LogFiles_connectionString": {
 						"value": "[parameters('LogFiles_connectionString')]"
 					},
@@ -115,14 +123,14 @@
 					"OnPremSQLServerDiljot_password": {
 						"value": "[parameters('OnPremSQLServerDiljot_password')]"
 					},
-					"IntegrationRuntimeAzureSSIS_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint": {
-						"value": "[parameters('IntegrationRuntimeAzureSSIS_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint')]"
+					"Azure_bulkCopy_SQLDB_properties_typeProperties_server": {
+						"value": "[parameters('Azure_bulkCopy_SQLDB_properties_typeProperties_server')]"
 					},
-					"IntegrationRuntimeAzureSSIS_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminUserName": {
-						"value": "[parameters('IntegrationRuntimeAzureSSIS_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminUserName')]"
+					"Azure_bulkCopy_SQLDB_properties_typeProperties_database": {
+						"value": "[parameters('Azure_bulkCopy_SQLDB_properties_typeProperties_database')]"
 					},
-					"IntegrationRuntimeAzureSSIS_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
-						"value": "[parameters('IntegrationRuntimeAzureSSIS_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword')]"
+					"Azure_bulkCopy_SQLDB_properties_typeProperties_userName": {
+						"value": "[parameters('Azure_bulkCopy_SQLDB_properties_typeProperties_userName')]"
 					},
 					"OnPremFSDiljot_properties_typeProperties_host": {
 						"value": "[parameters('OnPremFSDiljot_properties_typeProperties_host')]"

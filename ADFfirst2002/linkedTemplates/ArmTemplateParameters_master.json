@@ -11,6 +11,9 @@
 		"AzureBlobStorage2_connectionString": {
 			"value": ""
 		},
+		"Azure_bulkCopy_SQLDB_password": {
+			"value": ""
+		},
 		"LogFiles_connectionString": {
 			"value": ""
 		},
@@ -22,6 +25,15 @@
 		},
 		"OnPremSQLServerDiljot_password": {
 			"value": ""
+		},
+		"Azure_bulkCopy_SQLDB_properties_typeProperties_server": {
+			"value": "diljotsqlserver.database.windows.net"
+		},
+		"Azure_bulkCopy_SQLDB_properties_typeProperties_database": {
+			"value": "bulkCopySQL_DB"
+		},
+		"Azure_bulkCopy_SQLDB_properties_typeProperties_userName": {
+			"value": "diljotadmin"
 		},
 		"OnPremFSDiljot_properties_typeProperties_host": {
 			"value": "C:\\TDP training\\Azure\\Datasets\\Excel Files"
@@ -43,15 +55,6 @@
 		},
 		"OnPremSQLServerDiljot_properties_typeProperties_userName": {
 			"value": "diljotadminOP"
-		},
-		"IntegrationRuntimeAzureSSIS_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint": {
-			"value": "diljotsqlserver.database.windows.net"
-		},
-		"IntegrationRuntimeAzureSSIS_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminUserName": {
-			"value": "diljotadmin"
-		},
-		"IntegrationRuntimeAzureSSIS_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
-			"value": ""
 		},
 		"containerUri": {
 			"value": ""

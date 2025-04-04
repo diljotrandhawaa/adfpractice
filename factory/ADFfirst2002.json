@@ -2,7 +2,9 @@
 	"name": "ADFfirst2002",
 	"properties": {
 		"globalConfigurations": {
-			"PipelineBillingEnabled": "true"
+			"PipelineBillingEnabled": "true",
+			"factoryStagingLSReferenceName": "LogFiles",
+			"factoryStagingLSType": "LinkedServiceReference"
 		}
 	},
 	"location": "westus2",

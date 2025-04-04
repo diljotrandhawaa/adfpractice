@@ -1,0 +1,57 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "ADFfirst2002"
+		},
+		"AzureBlobStorage1_connectionString": {
+			"value": ""
+		},
+		"AzureBlobStorage2_connectionString": {
+			"value": ""
+		},
+		"LogFiles_connectionString": {
+			"value": ""
+		},
+		"OnPremFSDiljot_password": {
+			"value": ""
+		},
+		"OnPremFS_desktop_password": {
+			"value": ""
+		},
+		"OnPremSQLServerDiljot_password": {
+			"value": ""
+		},
+		"OnPremFSDiljot_properties_typeProperties_host": {
+			"value": "C:\\TDP training\\Azure\\Datasets\\Excel Files"
+		},
+		"OnPremFSDiljot_properties_typeProperties_userId": {
+			"value": "desktop-ek3ut3e\\diljot"
+		},
+		"OnPremFS_desktop_properties_typeProperties_host": {
+			"value": "C:\\Users\\sdilj\\Desktop"
+		},
+		"OnPremFS_desktop_properties_typeProperties_userId": {
+			"value": "desktop-ek3ut3e\\diljot"
+		},
+		"OnPremSQLServerDiljot_properties_typeProperties_server": {
+			"value": "DESKTOP-EK3UT3E"
+		},
+		"OnPremSQLServerDiljot_properties_typeProperties_database": {
+			"value": "V44_SSIS"
+		},
+		"OnPremSQLServerDiljot_properties_typeProperties_userName": {
+			"value": "diljotadminOP"
+		},
+		"IntegrationRuntimeAzureSSIS_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint": {
+			"value": "diljotsqlserver.database.windows.net"
+		},
+		"IntegrationRuntimeAzureSSIS_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminUserName": {
+			"value": "diljotadmin"
+		},
+		"IntegrationRuntimeAzureSSIS_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
+			"value": ""
+		}
+	}
+}

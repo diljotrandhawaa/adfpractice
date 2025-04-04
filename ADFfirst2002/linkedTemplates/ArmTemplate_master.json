@@ -1,0 +1,153 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "ADFfirst2002"
+		},
+		"AzureBlobStorage1_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureBlobStorage1'"
+		},
+		"AzureBlobStorage2_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureBlobStorage2'"
+		},
+		"LogFiles_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'LogFiles'"
+		},
+		"OnPremFSDiljot_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'OnPremFSDiljot'"
+		},
+		"OnPremFS_desktop_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'OnPremFS_desktop'"
+		},
+		"OnPremSQLServerDiljot_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'OnPremSQLServerDiljot'"
+		},
+		"OnPremFSDiljot_properties_typeProperties_host": {
+			"type": "string",
+			"defaultValue": "C:\\TDP training\\Azure\\Datasets\\Excel Files"
+		},
+		"OnPremFSDiljot_properties_typeProperties_userId": {
+			"type": "string",
+			"defaultValue": "desktop-ek3ut3e\\diljot"
+		},
+		"OnPremFS_desktop_properties_typeProperties_host": {
+			"type": "string",
+			"defaultValue": "C:\\Users\\sdilj\\Desktop"
+		},
+		"OnPremFS_desktop_properties_typeProperties_userId": {
+			"type": "string",
+			"defaultValue": "desktop-ek3ut3e\\diljot"
+		},
+		"OnPremSQLServerDiljot_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "DESKTOP-EK3UT3E"
+		},
+		"OnPremSQLServerDiljot_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "V44_SSIS"
+		},
+		"OnPremSQLServerDiljot_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "diljotadminOP"
+		},
+		"IntegrationRuntimeAzureSSIS_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint": {
+			"type": "string",
+			"defaultValue": "diljotsqlserver.database.windows.net"
+		},
+		"IntegrationRuntimeAzureSSIS_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminUserName": {
+			"type": "string",
+			"defaultValue": "diljotadmin"
+		},
+		"IntegrationRuntimeAzureSSIS_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
+			"type": "secureString"
+		},
+		"containerUri": {
+			"type": "string",
+			"metadata": "URI to storage account containing linked ARM templates"
+		},
+		"containerSasToken": {
+			"type": "string",
+			"metadata": "Sas token to storage account containing linked ARM templates"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "ADFfirst2002_ArmTemplate_0",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2024-03-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_0.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"AzureBlobStorage1_connectionString": {
+						"value": "[parameters('AzureBlobStorage1_connectionString')]"
+					},
+					"AzureBlobStorage2_connectionString": {
+						"value": "[parameters('AzureBlobStorage2_connectionString')]"
+					},
+					"LogFiles_connectionString": {
+						"value": "[parameters('LogFiles_connectionString')]"
+					},
+					"OnPremFSDiljot_password": {
+						"value": "[parameters('OnPremFSDiljot_password')]"
+					},
+					"OnPremFS_desktop_password": {
+						"value": "[parameters('OnPremFS_desktop_password')]"
+					},
+					"OnPremSQLServerDiljot_password": {
+						"value": "[parameters('OnPremSQLServerDiljot_password')]"
+					},
+					"IntegrationRuntimeAzureSSIS_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint": {
+						"value": "[parameters('IntegrationRuntimeAzureSSIS_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint')]"
+					},
+					"IntegrationRuntimeAzureSSIS_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminUserName": {
+						"value": "[parameters('IntegrationRuntimeAzureSSIS_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminUserName')]"
+					},
+					"IntegrationRuntimeAzureSSIS_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
+						"value": "[parameters('IntegrationRuntimeAzureSSIS_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword')]"
+					},
+					"OnPremFSDiljot_properties_typeProperties_host": {
+						"value": "[parameters('OnPremFSDiljot_properties_typeProperties_host')]"
+					},
+					"OnPremFSDiljot_properties_typeProperties_userId": {
+						"value": "[parameters('OnPremFSDiljot_properties_typeProperties_userId')]"
+					},
+					"OnPremFS_desktop_properties_typeProperties_host": {
+						"value": "[parameters('OnPremFS_desktop_properties_typeProperties_host')]"
+					},
+					"OnPremFS_desktop_properties_typeProperties_userId": {
+						"value": "[parameters('OnPremFS_desktop_properties_typeProperties_userId')]"
+					},
+					"OnPremSQLServerDiljot_properties_typeProperties_server": {
+						"value": "[parameters('OnPremSQLServerDiljot_properties_typeProperties_server')]"
+					},
+					"OnPremSQLServerDiljot_properties_typeProperties_database": {
+						"value": "[parameters('OnPremSQLServerDiljot_properties_typeProperties_database')]"
+					},
+					"OnPremSQLServerDiljot_properties_typeProperties_userName": {
+						"value": "[parameters('OnPremSQLServerDiljot_properties_typeProperties_userName')]"
+					}
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}

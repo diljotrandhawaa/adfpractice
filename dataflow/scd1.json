@@ -49,7 +49,7 @@
 				"     insertable:false,",
 				"     updateable:false,",
 				"     upsertable:true,",
-				"     keys:['ID'],",
+				"     keys:['Name'],",
 				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",

@@ -143,14 +143,14 @@
 								"storedProcedureParameters": {
 									"schemaName": {
 										"value": {
-											"value": "@item().table_schema",
+											"value": "@split(replace(item().name,'.csv' ,''), '_')[0]",
 											"type": "Expression"
 										},
 										"type": "String"
 									},
 									"tableName": {
 										"value": {
-											"value": "@item().table_name",
+											"value": "@split(replace(item().name,'.csv' ,''), '_')[1]",
 											"type": "Expression"
 										},
 										"type": "String"

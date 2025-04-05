@@ -61,7 +61,6 @@
 							"typeProperties": {
 								"source": {
 									"type": "AzureSqlSource",
-									"sqlReaderQuery": "CREATE TABLE Cars (\n\tID int identity(1,1) Primary Key,\n\tName varchar(100) null,\n\tModel varchar(100) null,\n\tLength int null,\n);\nGO\nCREATE TABLE Countries (\n\tID int identity(1,1) Primary Key,\n\tName varchar(100) null\n);\nGO\nCREATE TABLE Movies (\n\tID int identity(1,1) Primary Key,\n\tTitle varchar(100) null,\n\tGenres varchar(100) null\n);",
 									"queryTimeout": "02:00:00",
 									"partitionOption": "None"
 								},

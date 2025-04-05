@@ -88,8 +88,18 @@
 							},
 							"inputs": [
 								{
-									"referenceName": "TablesList",
-									"type": "DatasetReference"
+									"referenceName": "BulkCopySQLTables_toBlob",
+									"type": "DatasetReference",
+									"parameters": {
+										"schemaName": {
+											"value": "@item().table_schema",
+											"type": "Expression"
+										},
+										"tableName": {
+											"value": "@item().table_name",
+											"type": "Expression"
+										}
+									}
 								}
 							],
 							"outputs": [

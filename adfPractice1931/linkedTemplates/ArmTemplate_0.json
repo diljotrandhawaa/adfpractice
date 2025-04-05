@@ -76,11 +76,48 @@
 					"referenceName": "adfblobstorageDiljot",
 					"type": "LinkedServiceReference"
 				},
+				"parameters": {
+					"fileName": {
+						"type": "String"
+					}
+				},
 				"annotations": [],
 				"type": "DelimitedText",
 				"typeProperties": {
 					"location": {
-						"type": "AzureBlobStorageLocation"
+						"type": "AzureBlobStorageLocation",
+						"fileName": {
+							"value": "@dataset().fileName",
+							"type": "Expression"
+						},
+						"container": "bulk-copy-files"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/adfblobstorageDiljot')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/BulkCopyFiles_toSQL')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "adfblobstorageDiljot",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"container": "bulk-copy-files"
 					},
 					"columnDelimiter": ",",
 					"escapeChar": "\\",
@@ -111,43 +148,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/BulkCopyFiles_toSQL')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "adfblobstorageDiljot",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"fileName": {
-						"type": "String"
-					}
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"fileName": {
-							"value": "@dataset().fileName",
-							"type": "Expression"
-						},
-						"container": "bulk-copy-files"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/adfblobstorageDiljot')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/BulkCopySQLTables_toSQL')]",
+			"name": "[concat(parameters('factoryName'), '/BulkCopySQLTables_toBlob')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -291,7 +292,7 @@
 									},
 									"inputs": [
 										{
-											"referenceName": "BulkCopySQLTables_toSQL",
+											"referenceName": "BulkCopySQLTables_toBlob",
 											"type": "DatasetReference",
 											"parameters": {
 												"schemaName": {
@@ -307,7 +308,7 @@
 									],
 									"outputs": [
 										{
-											"referenceName": "BulkCopyFiles_toSQL",
+											"referenceName": "BulkCopyFiles_toBlob",
 											"type": "DatasetReference",
 											"parameters": {
 												"fileName": {
@@ -330,8 +331,8 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/TablesList')]",
-				"[concat(variables('factoryId'), '/datasets/BulkCopySQLTables_toSQL')]",
-				"[concat(variables('factoryId'), '/datasets/BulkCopyFiles_toSQL')]"
+				"[concat(variables('factoryId'), '/datasets/BulkCopySQLTables_toBlob')]",
+				"[concat(variables('factoryId'), '/datasets/BulkCopyFiles_toBlob')]"
 			]
 		},
 		{
@@ -341,8 +342,8 @@
 			"properties": {
 				"activities": [
 					{
-						"name": "Lookup1",
-						"type": "Lookup",
+						"name": "Get Metadata1",
+						"type": "GetMetadata",
 						"dependsOn": [],
 						"policy": {
 							"timeout": "0.12:00:00",
@@ -353,23 +354,53 @@
 						},
 						"userProperties": [],
 						"typeProperties": {
-							"source": {
-								"type": "DelimitedTextSource",
-								"storeSettings": {
-									"type": "AzureBlobStorageReadSettings",
-									"fileListPath": "bulk-copy-files",
-									"enablePartitionDiscovery": false
-								},
-								"formatSettings": {
-									"type": "DelimitedTextReadSettings"
-								}
-							},
 							"dataset": {
-								"referenceName": "BulkCopyFiles_toBlob",
+								"referenceName": "BulkCopyFiles_toSQL",
 								"type": "DatasetReference",
 								"parameters": {}
 							},
-							"firstRowOnly": false
+							"fieldList": [
+								"childItems",
+								"itemName"
+							],
+							"storeSettings": {
+								"type": "AzureBlobStorageReadSettings",
+								"recursive": true,
+								"enablePartitionDiscovery": false
+							},
+							"formatSettings": {
+								"type": "DelimitedTextReadSettings"
+							}
+						}
+					},
+					{
+						"name": "ForEach1",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "Get Metadata1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Get Metadata1').output.childItems",
+								"type": "Expression"
+							},
+							"activities": [
+								{
+									"name": "Wait1",
+									"type": "Wait",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"waitTimeInSeconds": 1
+									}
+								}
+							]
 						}
 					}
 				],
@@ -379,7 +410,7 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/BulkCopyFiles_toBlob')]"
+				"[concat(variables('factoryId'), '/datasets/BulkCopyFiles_toSQL')]"
 			]
 		}
 	]

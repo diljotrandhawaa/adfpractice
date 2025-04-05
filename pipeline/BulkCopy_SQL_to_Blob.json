@@ -140,7 +140,7 @@
 					"method": "POST",
 					"url": "https://prod-16.westus2.logic.azure.com:443/workflows/16381019ba95471991159e16fa59c80b/triggers/When_a_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_a_HTTP_request_is_received%2Frun&sv=1.0&sig=8-c28tovtwwilo3knSI4SmDDpHqxJFXRQs3WcMdQra8",
 					"body": {
-						"value": "{\n    \"title\": \"\",\n    \"message\": \"\",\n    \"color\": \"\",\n    \"dataFactoryName\": \"\",\n    \"pipelineName\": \"\",\n    \"pipelineRunId\": \"\",\n    \"time\": \"\"\n}",
+						"value": "{\n    \"title\": \"Bulk Copy is done!\",\n    \"message\": \"The Pipeline has been successfully executed\",\n    \"color\": \"Green\",\n    \"dataFactoryName\": \"@{pipeline().DataFactory}\",\n    \"pipelineName\": \"@{pipeline().Pipeline}\",\n    \"pipelineRunId\": \"@{pipeline().RunId}\",\n    \"time\": \"@{utcNow()}\"\n}",
 						"type": "Expression"
 					}
 				}

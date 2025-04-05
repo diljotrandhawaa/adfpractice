@@ -17,7 +17,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
-						"sqlReaderQuery": "select * \nfrom diljotSQL_DB.INFORMATION_SCHEMA.TABLES\nwhere Table_type = 'BASE TABLE'",
+						"sqlReaderQuery": "select * \nfrom diljotSQL_DB.INFORMATION_SCHEMA.TABLES\nWHERE TABLE_TYPE = 'BASE TABLE'",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},

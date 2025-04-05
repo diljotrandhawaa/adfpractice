@@ -1,0 +1,13 @@
+{
+	"name": "TablesList",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "diljotSQL_DB",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

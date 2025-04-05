@@ -1,5 +1,5 @@
 {
-	"name": "BulkCopyFiles_toSQL",
+	"name": "BulkCopyFiles_toBlob",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "adfblobstorageDiljot",

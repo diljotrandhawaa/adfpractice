@@ -50,6 +50,7 @@
 				"     updateable:false,",
 				"     upsertable:true,",
 				"     keys:['ID'],",
+				"     skipKeyWrites:true,",
 				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",

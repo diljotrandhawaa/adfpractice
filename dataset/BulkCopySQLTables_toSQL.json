@@ -1,5 +1,5 @@
 {
-	"name": "BulkCopySQLTables",
+	"name": "BulkCopySQLTables_toSQL",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "diljotSQL_DB",

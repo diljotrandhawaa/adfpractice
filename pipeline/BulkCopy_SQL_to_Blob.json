@@ -87,7 +87,7 @@
 							},
 							"inputs": [
 								{
-									"referenceName": "BulkCopySQLTables",
+									"referenceName": "BulkCopySQLTables_toSQL",
 									"type": "DatasetReference",
 									"parameters": {
 										"schemaName": {
@@ -103,7 +103,7 @@
 							],
 							"outputs": [
 								{
-									"referenceName": "BulkCopyFiles",
+									"referenceName": "BulkCopyFiles_toSQL",
 									"type": "DatasetReference",
 									"parameters": {
 										"fileName": {

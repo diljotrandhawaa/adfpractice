@@ -19,7 +19,7 @@
 						"type": "DelimitedTextSource",
 						"storeSettings": {
 							"type": "AzureBlobStorageReadSettings",
-							"recursive": true,
+							"fileListPath": "bulk-copy-files",
 							"enablePartitionDiscovery": false
 						},
 						"formatSettings": {
@@ -27,9 +27,10 @@
 						}
 					},
 					"dataset": {
-						"referenceName": "BulkCopyFiles_toSQL",
+						"referenceName": "BulkCopyFiles_toBlob",
 						"type": "DatasetReference"
-					}
+					},
+					"firstRowOnly": false
 				}
 			}
 		],

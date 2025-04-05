@@ -1,5 +1,5 @@
 {
-	"name": "pipeline1",
+	"name": "BulkCopy_Blob_to_SQL",
 	"properties": {
 		"activities": [
 			{

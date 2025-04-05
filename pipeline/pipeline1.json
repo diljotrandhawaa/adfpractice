@@ -19,7 +19,10 @@
 						"referenceName": "BulkCopyFiles_toSQL",
 						"type": "DatasetReference"
 					},
-					"fieldList": [],
+					"fieldList": [
+						"childItems",
+						"itemName"
+					],
 					"storeSettings": {
 						"type": "AzureBlobStorageReadSettings",
 						"recursive": true,

@@ -294,6 +294,153 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/CustomerData_tempCopy')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "diljotSQL_DW",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "CustomerKey",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "CustomerID",
+						"type": "nvarchar"
+					},
+					{
+						"name": "FirstName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "LastName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Gender",
+						"type": "char"
+					},
+					{
+						"name": "Email",
+						"type": "nvarchar"
+					},
+					{
+						"name": "AddressLine1",
+						"type": "nvarchar"
+					},
+					{
+						"name": "City",
+						"type": "nvarchar"
+					},
+					{
+						"name": "State",
+						"type": "nvarchar"
+					},
+					{
+						"name": "PostalCode",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Country",
+						"type": "nvarchar"
+					},
+					{
+						"name": "IsCurrent",
+						"type": "bit"
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "DimCustomer_tempCopy"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/diljotSQL_DW')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CustomersData_DeDupl')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "adfblobstorageDiljot",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"container": "data-deduplication-files"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/adfblobstorageDiljot')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Customers_Data_Dupl')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "diljotSQL_DB",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "CustomerID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "FirstName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "LastName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Email",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Country",
+						"type": "nvarchar"
+					},
+					{
+						"name": "OrderDate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "Customers_Dupl"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/diljotSQL_DB')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/TablesList')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -465,6 +612,33 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/diljotSQL_DW')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/customerData_cleaned')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "adfblobstorageDiljot",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"container": "data-cleanup-archive"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/adfblobstorageDiljot')]"
 			]
 		},
 		{
@@ -786,7 +960,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/dataflow1')]",
+			"name": "[concat(parameters('factoryName'), '/Copy_clean_data')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -795,7 +969,7 @@
 					"sources": [
 						{
 							"dataset": {
-								"referenceName": "customerData_SQL",
+								"referenceName": "CustomerData_tempCopy",
 								"type": "DatasetReference"
 							},
 							"name": "source1"
@@ -804,7 +978,7 @@
 					"sinks": [
 						{
 							"dataset": {
-								"referenceName": "CustomerDataDW_csv",
+								"referenceName": "customerData_cleaned",
 								"type": "DatasetReference"
 							},
 							"name": "sink1"
@@ -812,7 +986,7 @@
 					],
 					"transformations": [
 						{
-							"name": "select1"
+							"name": "split1"
 						}
 					],
 					"scriptLines": [
@@ -834,63 +1008,24 @@
 						"     validateSchema: false,",
 						"     isolationLevel: 'READ_UNCOMMITTED',",
 						"     format: 'table') ~> source1",
-						"source1 select(mapColumn(",
-						"          CustomerKey,",
-						"          CustomerID,",
-						"          FirstName,",
-						"          LastName,",
-						"          Gender,",
-						"          Email,",
-						"          AddressLine1,",
-						"          City,",
-						"          State,",
-						"          PostalCode,",
-						"          Country",
-						"     ),",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true) ~> select1",
-						"select1 sink(allowSchemaDrift: true,",
+						"source1 split(IsCurrent == false() || isNull(IsCurrent),",
+						"     disjoint: false) ~> split1@(oldData, cleanData)",
+						"split1@cleanData sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
-						"     input(",
-						"          CustomerKey as string,",
-						"          CustomerID as string,",
-						"          FirstName as string,",
-						"          LastName as string,",
-						"          Gender as string,",
-						"          Email as string,",
-						"          AddressLine1 as string,",
-						"          City as string,",
-						"          State as string,",
-						"          PostalCode as string,",
-						"          Country as string",
-						"     ),",
-						"     partitionFileNames:['customerDataDW_csv'],",
+						"     partitionFileNames:['DW_cleanup_data.csv'],",
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true,",
-						"     mapColumn(",
-						"          CustomerKey,",
-						"          CustomerID,",
-						"          FirstName,",
-						"          LastName,",
-						"          Gender,",
-						"          Email,",
-						"          AddressLine1,",
-						"          City,",
-						"          State,",
-						"          PostalCode,",
-						"          Country",
-						"     ),",
 						"     partitionBy('hash', 1)) ~> sink1"
 					]
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/customerData_SQL')]",
-				"[concat(variables('factoryId'), '/datasets/CustomerDataDW_csv')]"
+				"[concat(variables('factoryId'), '/datasets/CustomerData_tempCopy')]",
+				"[concat(variables('factoryId'), '/datasets/customerData_cleaned')]"
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/scd1')]",
+			"name": "[concat(parameters('factoryName'), '/DW_temp_copy')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -899,7 +1034,7 @@
 					"sources": [
 						{
 							"dataset": {
-								"referenceName": "carsData_csv",
+								"referenceName": "customerData_SQL",
 								"type": "DatasetReference"
 							},
 							"name": "source1"
@@ -908,147 +1043,14 @@
 					"sinks": [
 						{
 							"dataset": {
-								"referenceName": "carsData_SQL",
+								"referenceName": "CustomerData_tempCopy",
 								"type": "DatasetReference"
 							},
 							"name": "sink1"
 						}
 					],
-					"transformations": [
-						{
-							"name": "alterRow1"
-						}
-					],
+					"transformations": [],
 					"scriptLines": [
-						"source(output(",
-						"          ID as integer,",
-						"          Name as string,",
-						"          Model as string,",
-						"          Length as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false) ~> source1",
-						"source1 alterRow(upsertIf(0==0)) ~> alterRow1",
-						"alterRow1 sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     input(",
-						"          ID as integer,",
-						"          Name as string,",
-						"          Model as string,",
-						"          Length as integer",
-						"     ),",
-						"     deletable:false,",
-						"     insertable:false,",
-						"     updateable:false,",
-						"     upsertable:true,",
-						"     keys:['Name'],",
-						"     format: 'table',",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
-						"     errorHandlingOption: 'stopOnFirstError',",
-						"     mapColumn(",
-						"          Name,",
-						"          Model,",
-						"          Length",
-						"     )) ~> sink1"
-					]
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/carsData_csv')]",
-				"[concat(variables('factoryId'), '/datasets/carsData_SQL')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/scd2')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "CustomerDataDW_csv",
-								"type": "DatasetReference"
-							},
-							"name": "CustomerCSV"
-						},
-						{
-							"dataset": {
-								"referenceName": "customerData_SQL",
-								"type": "DatasetReference"
-							},
-							"name": "CustomerLookup"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "customerData_SQL",
-								"type": "DatasetReference"
-							},
-							"name": "sink1"
-						},
-						{
-							"dataset": {
-								"referenceName": "customerData_SQL",
-								"type": "DatasetReference"
-							},
-							"name": "sink2"
-						},
-						{
-							"dataset": {
-								"referenceName": "customerData_SQL",
-								"type": "DatasetReference"
-							},
-							"name": "sink3"
-						}
-					],
-					"transformations": [
-						{
-							"name": "select1"
-						},
-						{
-							"name": "CSVvsLookup"
-						},
-						{
-							"name": "split1"
-						},
-						{
-							"name": "derivedColumn1"
-						},
-						{
-							"name": "select2"
-						},
-						{
-							"name": "derivedColumn2"
-						},
-						{
-							"name": "derivedColumn3"
-						},
-						{
-							"name": "alterRow1"
-						}
-					],
-					"scriptLines": [
-						"source(output(",
-						"          CustomerKey as integer,",
-						"          CustomerID as string,",
-						"          FirstName as string,",
-						"          LastName as string,",
-						"          Gender as string,",
-						"          Email as string,",
-						"          AddressLine1 as string,",
-						"          City as string,",
-						"          State as string,",
-						"          PostalCode as string,",
-						"          Country as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false) ~> CustomerCSV",
 						"source(output(",
 						"          CustomerKey as integer,",
 						"          CustomerID as string,",
@@ -1066,63 +1068,8 @@
 						"     allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     isolationLevel: 'READ_UNCOMMITTED',",
-						"     format: 'table') ~> CustomerLookup",
-						"CustomerLookup select(mapColumn(",
-						"          CustomerKey_lookup = CustomerKey,",
-						"          CustomerID_lookup = CustomerID,",
-						"          FirstName_lookup = FirstName,",
-						"          LastName_lookup = LastName,",
-						"          Gender_lookup = Gender,",
-						"          Email_lookup = Email,",
-						"          AddressLine1_lookup = AddressLine1,",
-						"          City_lookup = City,",
-						"          State_lookup = State,",
-						"          PostalCode_lookup = PostalCode,",
-						"          Country_lookup = Country,",
-						"          IsCurrent_lookup = IsCurrent",
-						"     ),",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true) ~> select1",
-						"CustomerCSV, select1 lookup(CustomerKey == CustomerKey_lookup,",
-						"     multiple: false,",
-						"     pickup: 'any',",
-						"     broadcast: 'auto')~> CSVvsLookup",
-						"CSVvsLookup split(isNull(CustomerKey_lookup),",
-						"     !isNull(CustomerKey_lookup) && ((CustomerID_lookup != CustomerID) || (FirstName_lookup != FirstName) || (LastName_lookup !=LastName) || (Gender_lookup != Gender) \r",
-						"|| (Email_lookup != Email) || (AddressLine1_lookup != AddressLine1) || (City_lookup != City) || (State_lookup != State) || (PostalCode_lookup != PostalCode) || (Country_lookup != Country)),",
-						"     disjoint: false) ~> split1@(RecordExistNo, RecordExists, random)",
-						"split1@RecordExistNo derive(isCurrent_new = 1) ~> derivedColumn1",
-						"split1@RecordExists select(mapColumn(",
-						"          CustomerKey,",
-						"          CustomerID,",
-						"          FirstName,",
-						"          LastName,",
-						"          Gender,",
-						"          Email,",
-						"          AddressLine1,",
-						"          City,",
-						"          State,",
-						"          PostalCode,",
-						"          Country,",
-						"          CustomerKey_lookup,",
-						"          CustomerID_lookup,",
-						"          FirstName_lookup,",
-						"          LastName_lookup,",
-						"          Gender_lookup,",
-						"          Email_lookup,",
-						"          AddressLine1_lookup,",
-						"          City_lookup,",
-						"          State_lookup,",
-						"          PostalCode_lookup,",
-						"          Country_lookup,",
-						"          IsCurrent_lookup",
-						"     ),",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true) ~> select2",
-						"derivedColumn3 derive(IsCurrent_lookup = 0) ~> derivedColumn2",
-						"select2 derive(isCurrent_new = 1) ~> derivedColumn3",
-						"derivedColumn2 alterRow(updateIf(1==1)) ~> alterRow1",
-						"derivedColumn1 sink(allowSchemaDrift: true,",
+						"     format: 'table') ~> source1",
+						"source1 sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     input(",
 						"          CustomerKey as integer,",
@@ -1145,241 +1092,79 @@
 						"     format: 'table',",
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true,",
-						"     errorHandlingOption: 'stopOnFirstError',",
-						"     mapColumn(",
-						"          CustomerKey,",
-						"          CustomerID,",
-						"          FirstName,",
-						"          LastName,",
-						"          Gender,",
-						"          Email,",
-						"          AddressLine1,",
-						"          City,",
-						"          State,",
-						"          PostalCode,",
-						"          Country,",
-						"          IsCurrent = isCurrent_new",
-						"     )) ~> sink1",
-						"alterRow1 sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     input(",
-						"          CustomerKey as integer,",
-						"          CustomerID as string,",
-						"          FirstName as string,",
-						"          LastName as string,",
-						"          Gender as string,",
-						"          Email as string,",
-						"          AddressLine1 as string,",
-						"          City as string,",
-						"          State as string,",
-						"          PostalCode as string,",
-						"          Country as string,",
-						"          IsCurrent as boolean",
-						"     ),",
-						"     deletable:false,",
-						"     insertable:true,",
-						"     updateable:false,",
-						"     upsertable:false,",
-						"     format: 'table',",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
-						"     errorHandlingOption: 'stopOnFirstError',",
-						"     mapColumn(",
-						"          CustomerKey,",
-						"          CustomerID,",
-						"          FirstName,",
-						"          LastName,",
-						"          Gender,",
-						"          Email,",
-						"          AddressLine1,",
-						"          City,",
-						"          State,",
-						"          PostalCode,",
-						"          Country,",
-						"          IsCurrent = isCurrent_new",
-						"     )) ~> sink2",
-						"alterRow1 sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     input(",
-						"          CustomerKey as integer,",
-						"          CustomerID as string,",
-						"          FirstName as string,",
-						"          LastName as string,",
-						"          Gender as string,",
-						"          Email as string,",
-						"          AddressLine1 as string,",
-						"          City as string,",
-						"          State as string,",
-						"          PostalCode as string,",
-						"          Country as string,",
-						"          IsCurrent as boolean",
-						"     ),",
-						"     deletable:false,",
-						"     insertable:false,",
-						"     updateable:true,",
-						"     upsertable:false,",
-						"     keys:['CustomerKey','CustomerID','FirstName','LastName','Gender','Email','AddressLine1','City'],",
-						"     format: 'table',",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
-						"     errorHandlingOption: 'stopOnFirstError',",
-						"     mapColumn(",
-						"          CustomerKey,",
-						"          CustomerID,",
-						"          FirstName,",
-						"          LastName,",
-						"          Gender,",
-						"          Email,",
-						"          AddressLine1,",
-						"          City,",
-						"          State,",
-						"          PostalCode,",
-						"          Country,",
-						"          IsCurrent = IsCurrent_lookup",
-						"     )) ~> sink3"
+						"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
 					]
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/CustomerDataDW_csv')]",
-				"[concat(variables('factoryId'), '/datasets/customerData_SQL')]"
+				"[concat(variables('factoryId'), '/datasets/customerData_SQL')]",
+				"[concat(variables('factoryId'), '/datasets/CustomerData_tempCopy')]"
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/SendEmail_after_BulkCopy')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
+			"name": "[concat(parameters('factoryName'), '/DeDuplication_SQL')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"activities": [
-					{
-						"name": "BulkCopy_toBlob",
-						"type": "ExecutePipeline",
-						"dependsOn": [],
-						"policy": {
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "BulkCopy_SQL_to_Blob",
-								"type": "PipelineReference"
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "Customers_Data_Dupl",
+								"type": "DatasetReference"
 							},
-							"waitOnCompletion": true,
-							"parameters": {}
+							"name": "source1"
 						}
-					},
-					{
-						"name": "Send Success Email",
-						"type": "WebActivity",
-						"dependsOn": [
-							{
-								"activity": "BulkCopy_toBlob",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "CustomersData_DeDupl",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "RankedByOrderDate"
 						},
-						"userProperties": [],
-						"typeProperties": {
-							"method": "POST",
-							"headers": {},
-							"url": "https://prod-16.westus2.logic.azure.com:443/workflows/16381019ba95471991159e16fa59c80b/triggers/When_a_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_a_HTTP_request_is_received%2Frun&sv=1.0&sig=8-c28tovtwwilo3knSI4SmDDpHqxJFXRQs3WcMdQra8",
-							"body": {
-								"value": "{\n    \"title\": \"@{pipeline().Pipeline} SUCCEEDED!\",\n    \"message\": \"The Pipeline has been successfully executed\",\n    \"color\": \"Green\",\n    \"dataFactoryName\": \"@{pipeline().DataFactory}\",\n    \"pipelineName\": \"@{pipeline().Pipeline}\",\n    \"pipelineRunId\": \"@{pipeline().RunId}\",\n    \"time\": \"@{utcNow()}\"\n}",
-								"type": "Expression"
-							}
+						{
+							"name": "OnlyLatestOrderDate"
 						}
-					},
-					{
-						"name": "Send Failed Email",
-						"type": "WebActivity",
-						"dependsOn": [
-							{
-								"activity": "BulkCopy_toBlob",
-								"dependencyConditions": [
-									"Failed"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"method": "POST",
-							"headers": {},
-							"url": "https://prod-16.westus2.logic.azure.com:443/workflows/16381019ba95471991159e16fa59c80b/triggers/When_a_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_a_HTTP_request_is_received%2Frun&sv=1.0&sig=8-c28tovtwwilo3knSI4SmDDpHqxJFXRQs3WcMdQra8",
-							"body": {
-								"value": "{\n    \"title\": \"@{pipeline().Pipeline} FAILED!\",\n    \"message\": \"@{activity('BulkCopy_toBlob').error.message}\",\n    \"color\": \"Red\",\n    \"dataFactoryName\": \"@{pipeline().DataFactory}\",\n    \"pipelineName\": \"@{pipeline().Pipeline}\",\n    \"pipelineRunId\": \"@{pipeline().RunId}\",\n    \"time\": \"@{utcNow()}\"\n}",
-								"type": "Expression"
-							}
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"annotations": []
+					],
+					"scriptLines": [
+						"source(output(",
+						"          CustomerID as integer,",
+						"          FirstName as string,",
+						"          LastName as string,",
+						"          Email as string,",
+						"          Country as string,",
+						"          OrderDate as timestamp",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> source1",
+						"source1 window(over(FirstName,",
+						"          LastName,",
+						"          Email),",
+						"     desc(OrderDate, true),",
+						"     rowNum = rowNumber()) ~> RankedByOrderDate",
+						"RankedByOrderDate filter(rowNum == 1) ~> OnlyLatestOrderDate",
+						"OnlyLatestOrderDate sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     partitionFileNames:['CustomersData_Unique.csv'],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     partitionBy('hash', 1)) ~> sink1"
+					]
+				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/BulkCopy_SQL_to_Blob')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/scd1_dataFlow_exec')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "scd1",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "scd1",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"source1": {},
-									"sink1": {}
-								}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/scd1')]"
+				"[concat(variables('factoryId'), '/datasets/Customers_Data_Dupl')]",
+				"[concat(variables('factoryId'), '/datasets/CustomersData_DeDupl')]"
 			]
 		}
 	]

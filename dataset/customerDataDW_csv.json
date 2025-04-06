@@ -10,7 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "Customers_DW.csv",
+				"fileName": "customerDataDW_csv",
 				"container": "bulk-copy-files"
 			},
 			"columnDelimiter": ",",

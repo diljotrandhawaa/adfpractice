@@ -76,6 +76,7 @@
 				"          Country as string,",
 				"          IsCurrent as string",
 				"     ),",
+				"     partitionFileNames:['customerDataDW_csv'],",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
 				"     mapColumn(",
@@ -90,7 +91,8 @@
 				"          State,",
 				"          PostalCode,",
 				"          Country",
-				"     )) ~> sink1"
+				"     ),",
+				"     partitionBy('hash', 1)) ~> sink1"
 			]
 		}
 	}

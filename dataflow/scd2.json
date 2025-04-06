@@ -40,6 +40,12 @@
 				},
 				{
 					"name": "derivedColumn1"
+				},
+				{
+					"name": "derivedColumn2"
+				},
+				{
+					"name": "alterRow1"
 				}
 			],
 			"scriptLines": [
@@ -102,6 +108,8 @@
 				"|| (Email_lookup != Email) || (AddressLine1_lookup != AddressLine1) || (City_lookup != City) || (State_lookup != State) || (PostalCode_lookup != PostalCode) || (Country_lookup != Country)),",
 				"     disjoint: false) ~> split1@(RecordExistNo, RecordExists, random)",
 				"split1@RecordExistNo derive(isCurrent_new = 1) ~> derivedColumn1",
+				"split1@RecordExists derive(IsCurrent_lookup = 0) ~> derivedColumn2",
+				"derivedColumn2 alterRow(updateIf(1==1)) ~> alterRow1",
 				"derivedColumn1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",

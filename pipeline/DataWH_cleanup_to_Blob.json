@@ -3,7 +3,27 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "DW_temp_copy",
+				"name": "Stored procedure1",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[Clear_tempCopy_table]"
+				},
+				"linkedServiceName": {
+					"referenceName": "diljotSQL_DW",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Copy_clean_data",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [
 					{
@@ -23,7 +43,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "DW_temp_copy",
+						"referenceName": "Copy_clean_data",
 						"type": "DataFlowReference"
 					},
 					"compute": {
@@ -31,26 +51,6 @@
 						"computeType": "General"
 					},
 					"traceLevel": "Fine"
-				}
-			},
-			{
-				"name": "Stored procedure1",
-				"type": "SqlServerStoredProcedure",
-				"dependsOn": [],
-				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"storedProcedureName": "[dbo].[Clear_tempCopy_table]"
-				},
-				"linkedServiceName": {
-					"referenceName": "diljotSQL_DW",
-					"type": "LinkedServiceReference"
 				}
 			}
 		],

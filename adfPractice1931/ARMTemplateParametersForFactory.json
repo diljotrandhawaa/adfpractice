@@ -11,6 +11,9 @@
 		"diljotSQL_DB_password": {
 			"value": ""
 		},
+		"diljotSQL_DW_password": {
+			"value": ""
+		},
 		"diljotSQL_DB_properties_typeProperties_server": {
 			"value": "diljotsqlserver1931.database.windows.net"
 		},
@@ -18,6 +21,15 @@
 			"value": "diljotSQL_DB"
 		},
 		"diljotSQL_DB_properties_typeProperties_userName": {
+			"value": "diljotadmin"
+		},
+		"diljotSQL_DW_properties_typeProperties_server": {
+			"value": "diljotsqlserver1931.database.windows.net"
+		},
+		"diljotSQL_DW_properties_typeProperties_database": {
+			"value": "diljotSQL_DW"
+		},
+		"diljotSQL_DW_properties_typeProperties_userName": {
 			"value": "diljotadmin"
 		}
 	}

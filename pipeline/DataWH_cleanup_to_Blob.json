@@ -54,7 +54,7 @@
 				}
 			},
 			{
-				"name": "Script1",
+				"name": "Delete_old_Data",
 				"type": "Script",
 				"dependsOn": [
 					{

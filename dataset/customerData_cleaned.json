@@ -1,0 +1,22 @@
+{
+	"name": "customerData_cleaned",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "adfblobstorageDiljot",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"container": "data-cleanup-archive"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}

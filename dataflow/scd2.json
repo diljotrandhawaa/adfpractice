@@ -33,6 +33,13 @@
 						"type": "DatasetReference"
 					},
 					"name": "UpdateOldSink"
+				},
+				{
+					"dataset": {
+						"referenceName": "customerData_SQL",
+						"type": "DatasetReference"
+					},
+					"name": "InsertNewSink"
 				}
 			],
 			"transformations": [
@@ -56,6 +63,12 @@
 				},
 				{
 					"name": "derivedColumn2"
+				},
+				{
+					"name": "InsertNew"
+				},
+				{
+					"name": "derivedColumn3"
 				}
 			],
 			"scriptLines": [
@@ -136,6 +149,22 @@
 				"     skipDuplicateMapOutputs: true) ~> UpdateOld",
 				"derivedColumn2 alterRow(updateIf(1==1)) ~> alterRow1",
 				"UpdateOld derive(IsCurrent_lookup = 0) ~> derivedColumn2",
+				"split1@RecordExists select(mapColumn(",
+				"          CustomerKey,",
+				"          CustomerID,",
+				"          FirstName,",
+				"          LastName,",
+				"          Gender,",
+				"          Email,",
+				"          AddressLine1,",
+				"          City,",
+				"          State,",
+				"          PostalCode,",
+				"          Country",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> InsertNew",
+				"InsertNew derive(isCurrent_new = 1) ~> derivedColumn3",
 				"derivedColumn1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
@@ -194,13 +223,12 @@
 				"     insertable:false,",
 				"     updateable:true,",
 				"     upsertable:false,",
-				"     keys:['CustomerKey','CustomerID','FirstName_lookup','LastName_lookup','Gender_lookup','Email_lookup','AddressLine1_lookup','City_lookup','State_lookup','PostalCode_lookup','Country_lookup'],",
+				"     keys:['CustomerKey','CustomerID','FirstName','LastName','Gender','Email','AddressLine1','City','State','PostalCode','Country'],",
 				"     format: 'table',",
-				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true,",
 				"     errorHandlingOption: 'stopOnFirstError',",
 				"     mapColumn(",
 				"          CustomerKey = CustomerKey_lookup,",
+				"          CustomerID = CustomerID_lookup,",
 				"          FirstName = FirstName_lookup,",
 				"          LastName = LastName_lookup,",
 				"          Gender = Gender_lookup,",
@@ -210,9 +238,46 @@
 				"          State = State_lookup,",
 				"          PostalCode = PostalCode_lookup,",
 				"          Country = Country_lookup,",
-				"          IsCurrent = IsCurrent_lookup,",
-				"          CustomerID = CustomerID_lookup",
-				"     )) ~> UpdateOldSink"
+				"          IsCurrent = IsCurrent_lookup",
+				"     )) ~> UpdateOldSink",
+				"derivedColumn3 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          CustomerKey as integer,",
+				"          CustomerID as string,",
+				"          FirstName as string,",
+				"          LastName as string,",
+				"          Gender as string,",
+				"          Email as string,",
+				"          AddressLine1 as string,",
+				"          City as string,",
+				"          State as string,",
+				"          PostalCode as string,",
+				"          Country as string,",
+				"          IsCurrent as boolean",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          CustomerKey,",
+				"          CustomerID,",
+				"          FirstName,",
+				"          LastName,",
+				"          Gender,",
+				"          Email,",
+				"          AddressLine1,",
+				"          City,",
+				"          State,",
+				"          PostalCode,",
+				"          Country,",
+				"          IsCurrent = isCurrent_new",
+				"     )) ~> InsertNewSink"
 			]
 		}
 	}

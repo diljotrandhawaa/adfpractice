@@ -50,7 +50,7 @@
 				"RankedByOrderDate filter(rowNum == 1) ~> OnlyLatestOrderDate",
 				"OnlyLatestOrderDate sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     partitionFileNames:['CustomersData_Unique'],",
+				"     partitionFileNames:['CustomersData_Unique.csv'],",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
 				"     partitionBy('hash', 1)) ~> sink1"

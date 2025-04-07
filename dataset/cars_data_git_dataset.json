@@ -1,0 +1,22 @@
+{
+	"name": "cars_data_git_dataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Cars_Data_Git",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "HttpServerLocation",
+				"relativeUrl": "diljotrandhawaa/cars_data_dataLakeDemo/main/CarsData.csv"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}

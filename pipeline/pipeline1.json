@@ -52,7 +52,7 @@
 						"referenceName": "carsData_SQL_incrementalLoad",
 						"type": "DatasetReference",
 						"parameters": {
-							"tableName": "CarsSalesData"
+							"tableName": "CarSalesData"
 						}
 					},
 					"firstRowOnly": false

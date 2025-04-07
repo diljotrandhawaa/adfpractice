@@ -117,7 +117,10 @@
 				"inputs": [
 					{
 						"referenceName": "carsData_SQL_incrementalLoad",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"tableName": "CarSalesData"
+						}
 					}
 				],
 				"outputs": [

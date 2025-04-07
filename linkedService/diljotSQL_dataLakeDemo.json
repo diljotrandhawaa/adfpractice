@@ -1,0 +1,17 @@
+{
+	"name": "diljotSQL_dataLakeDemo",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "AzureSqlDatabase",
+		"typeProperties": {
+			"server": "diljotsqlserver1931.database.windows.net",
+			"database": "dataLakeDemo_SQL_DW",
+			"encrypt": "mandatory",
+			"trustServerCertificate": true,
+			"authenticationType": "SQL",
+			"userName": "diljotadmin",
+			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkRBVEFGQUNUT1JZQDkwQkQ3OTU0LTJDQUEtNEY5Ri05MzBFLUJCMzc3NzNCRDM2OF9jNWM4MTZmYS1mY2QwLTQwZTMtYTljMC1mNjc5Zjg5NTMzYjIiDQp9"
+		}
+	}
+}

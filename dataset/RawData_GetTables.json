@@ -1,0 +1,23 @@
+{
+	"name": "RawData_GetTables",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "diljotSQL_RawData",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"tableName": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"table": {
+				"value": "@dataset().tableName",
+				"type": "Expression"
+			}
+		}
+	}
+}

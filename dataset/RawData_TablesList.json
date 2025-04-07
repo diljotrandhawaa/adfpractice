@@ -1,0 +1,12 @@
+{
+	"name": "RawData_TablesList",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "diljotSQL_RawData",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": []
+	}
+}

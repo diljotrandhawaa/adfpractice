@@ -1,0 +1,24 @@
+{
+	"name": "BronzeData_Tables",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "diljotSQL_dataLakeDemo",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"tableName": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "DS",
+			"table": {
+				"value": "@dataset().tableName",
+				"type": "Expression"
+			}
+		}
+	}
+}

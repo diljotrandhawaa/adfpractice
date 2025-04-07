@@ -46,7 +46,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
-						"sqlReaderQuery": "SELECT MAX(DATE) as Max_Date\nFROM CarSalesData",
+						"sqlReaderQuery": "SELECT MAX(DATE_ID) as Max_Date\nFROM CarSalesData",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},

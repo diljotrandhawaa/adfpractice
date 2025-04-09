@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "last_load",
+				"name": "Current_Load",
 				"type": "Lookup",
 				"dependsOn": [],
 				"policy": {
@@ -17,7 +17,36 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
-						"sqlReaderQuery": "SELECT * FROM watermark_table",
+						"sqlReaderQuery": "SELECT MAX(DATE_ID) FROM CarSalesData;",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "carsData_SQL_incrementalLoad",
+						"type": "DatasetReference",
+						"parameters": {
+							"tableName": "CarSalesData"
+						}
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "Last_Load",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "SELECT * FROM watermark_table;",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
@@ -32,46 +61,19 @@
 				}
 			},
 			{
-				"name": "current_load",
-				"type": "Lookup",
-				"dependsOn": [],
-				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"source": {
-						"type": "AzureSqlSource",
-						"sqlReaderQuery": "SELECT MAX(DATE_ID) as Max_Date\nFROM CarSalesData",
-						"queryTimeout": "02:00:00",
-						"partitionOption": "None"
-					},
-					"dataset": {
-						"referenceName": "carsData_SQL_incrementalLoad",
-						"type": "DatasetReference",
-						"parameters": {
-							"tableName": "CarSalesData"
-						}
-					},
-					"firstRowOnly": false
-				}
-			},
-			{
 				"name": "Copy data1",
 				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
-						"activity": "last_load",
+						"activity": "Current_Load",
 						"dependencyConditions": [
 							"Succeeded"
 						]
 					},
 					{
-						"activity": "current_load",
+						"activity": "Last_Load",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -88,31 +90,11 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
-						"sqlReaderQuery": {
-							"value": "select * from CarSalesData\nWhere Date_ID > '@{activity('last_load').output.value[0].last_load}'\nAND Date_ID <= '@{activity('current_load').output.value[0].Max_Date}'",
-							"type": "Expression"
-						},
+						"sqlReaderQuery": "",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
-					"sink": {
-						"type": "ParquetSink",
-						"storeSettings": {
-							"type": "AzureBlobFSWriteSettings"
-						},
-						"formatSettings": {
-							"type": "ParquetWriteSettings"
-						}
-					},
-					"enableStaging": false,
-					"translator": {
-						"type": "TabularTranslator",
-						"typeConversion": true,
-						"typeConversionSettings": {
-							"allowDataTruncation": true,
-							"treatBooleanAsNumber": false
-						}
-					}
+					"enableStaging": false
 				},
 				"inputs": [
 					{
@@ -122,49 +104,7 @@
 							"tableName": "CarSalesData"
 						}
 					}
-				],
-				"outputs": [
-					{
-						"referenceName": "bronze_incrementalLoad",
-						"type": "DatasetReference"
-					}
 				]
-			},
-			{
-				"name": "Stored procedure1",
-				"type": "SqlServerStoredProcedure",
-				"dependsOn": [
-					{
-						"activity": "Copy data1",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"storedProcedureName": "[dbo].[Update_WaterMark_table]",
-					"storedProcedureParameters": {
-						"lastLoad": {
-							"value": {
-								"value": "@activity('current_load').output.value[0].Max_Date",
-								"type": "Expression"
-							},
-							"type": "String"
-						}
-					}
-				},
-				"linkedServiceName": {
-					"referenceName": "diljotSQL_incrementalLoad",
-					"type": "LinkedServiceReference"
-				}
 			}
 		],
 		"annotations": []

@@ -1,0 +1,584 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "adfPractice1931"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/scd2')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "CustomerDataDW_csv",
+								"type": "DatasetReference"
+							},
+							"name": "CustomerCSV"
+						},
+						{
+							"dataset": {
+								"referenceName": "customerData_SQL",
+								"type": "DatasetReference"
+							},
+							"name": "CustomerLookup"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "customerData_SQL",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						},
+						{
+							"dataset": {
+								"referenceName": "customerData_SQL",
+								"type": "DatasetReference"
+							},
+							"name": "UpdateOldSink"
+						},
+						{
+							"dataset": {
+								"referenceName": "customerData_SQL",
+								"type": "DatasetReference"
+							},
+							"name": "InsertNewSink"
+						}
+					],
+					"transformations": [
+						{
+							"name": "select1"
+						},
+						{
+							"name": "CSVvsLookup"
+						},
+						{
+							"name": "split1"
+						},
+						{
+							"name": "derivedColumn1"
+						},
+						{
+							"name": "UpdateOld"
+						},
+						{
+							"name": "alterRow1"
+						},
+						{
+							"name": "derivedColumn2"
+						},
+						{
+							"name": "InsertNew"
+						},
+						{
+							"name": "derivedColumn3"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          CustomerKey as integer,",
+						"          CustomerID as string,",
+						"          FirstName as string,",
+						"          LastName as string,",
+						"          Gender as string,",
+						"          Email as string,",
+						"          AddressLine1 as string,",
+						"          City as string,",
+						"          State as string,",
+						"          PostalCode as string,",
+						"          Country as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> CustomerCSV",
+						"source(output(",
+						"          CustomerKey as integer,",
+						"          CustomerID as string,",
+						"          FirstName as string,",
+						"          LastName as string,",
+						"          Gender as string,",
+						"          Email as string,",
+						"          AddressLine1 as string,",
+						"          City as string,",
+						"          State as string,",
+						"          PostalCode as string,",
+						"          Country as string,",
+						"          IsCurrent as boolean",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> CustomerLookup",
+						"CustomerLookup select(mapColumn(",
+						"          CustomerKey_lookup = CustomerKey,",
+						"          CustomerID_lookup = CustomerID,",
+						"          FirstName_lookup = FirstName,",
+						"          LastName_lookup = LastName,",
+						"          Gender_lookup = Gender,",
+						"          Email_lookup = Email,",
+						"          AddressLine1_lookup = AddressLine1,",
+						"          City_lookup = City,",
+						"          State_lookup = State,",
+						"          PostalCode_lookup = PostalCode,",
+						"          Country_lookup = Country,",
+						"          IsCurrent_lookup = IsCurrent",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> select1",
+						"CustomerCSV, select1 lookup(CustomerKey == CustomerKey_lookup,",
+						"     multiple: false,",
+						"     pickup: 'any',",
+						"     broadcast: 'auto')~> CSVvsLookup",
+						"CSVvsLookup split(isNull(CustomerKey_lookup),",
+						"     !isNull(CustomerKey_lookup) && ((CustomerID_lookup != CustomerID) || (FirstName_lookup != FirstName) || (LastName_lookup !=LastName) || (Gender_lookup != Gender) \r",
+						"|| (Email_lookup != Email) || (AddressLine1_lookup != AddressLine1) || (City_lookup != City) || (State_lookup != State) || (PostalCode_lookup != PostalCode) || (Country_lookup != Country)),",
+						"     disjoint: false) ~> split1@(RecordExistNo, RecordExists, random)",
+						"split1@RecordExistNo derive(isCurrent_new = 1) ~> derivedColumn1",
+						"split1@RecordExists select(mapColumn(",
+						"          CustomerKey_lookup,",
+						"          CustomerID_lookup,",
+						"          FirstName_lookup,",
+						"          LastName_lookup,",
+						"          Gender_lookup,",
+						"          Email_lookup,",
+						"          AddressLine1_lookup,",
+						"          City_lookup,",
+						"          State_lookup,",
+						"          PostalCode_lookup,",
+						"          Country_lookup,",
+						"          IsCurrent_lookup",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> UpdateOld",
+						"derivedColumn2 alterRow(updateIf(1==1)) ~> alterRow1",
+						"UpdateOld derive(IsCurrent_lookup = 0) ~> derivedColumn2",
+						"split1@RecordExists select(mapColumn(",
+						"          CustomerKey,",
+						"          CustomerID,",
+						"          FirstName,",
+						"          LastName,",
+						"          Gender,",
+						"          Email,",
+						"          AddressLine1,",
+						"          City,",
+						"          State,",
+						"          PostalCode,",
+						"          Country",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> InsertNew",
+						"InsertNew derive(isCurrent_new = 1) ~> derivedColumn3",
+						"derivedColumn1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          CustomerKey as integer,",
+						"          CustomerID as string,",
+						"          FirstName as string,",
+						"          LastName as string,",
+						"          Gender as string,",
+						"          Email as string,",
+						"          AddressLine1 as string,",
+						"          City as string,",
+						"          State as string,",
+						"          PostalCode as string,",
+						"          Country as string,",
+						"          IsCurrent as boolean",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          CustomerKey,",
+						"          CustomerID,",
+						"          FirstName,",
+						"          LastName,",
+						"          Gender,",
+						"          Email,",
+						"          AddressLine1,",
+						"          City,",
+						"          State,",
+						"          PostalCode,",
+						"          Country,",
+						"          IsCurrent = isCurrent_new",
+						"     )) ~> sink1",
+						"alterRow1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          CustomerKey as integer,",
+						"          CustomerID as string,",
+						"          FirstName as string,",
+						"          LastName as string,",
+						"          Gender as string,",
+						"          Email as string,",
+						"          AddressLine1 as string,",
+						"          City as string,",
+						"          State as string,",
+						"          PostalCode as string,",
+						"          Country as string,",
+						"          IsCurrent as boolean",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:false,",
+						"     updateable:true,",
+						"     upsertable:false,",
+						"     keys:['CustomerKey','CustomerID','FirstName','LastName','Gender','Email','AddressLine1','City','State','PostalCode','Country'],",
+						"     format: 'table',",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          CustomerKey = CustomerKey_lookup,",
+						"          CustomerID = CustomerID_lookup,",
+						"          FirstName = FirstName_lookup,",
+						"          LastName = LastName_lookup,",
+						"          Gender = Gender_lookup,",
+						"          Email = Email_lookup,",
+						"          AddressLine1 = AddressLine1_lookup,",
+						"          City = City_lookup,",
+						"          State = State_lookup,",
+						"          PostalCode = PostalCode_lookup,",
+						"          Country = Country_lookup,",
+						"          IsCurrent = IsCurrent_lookup",
+						"     )) ~> UpdateOldSink",
+						"derivedColumn3 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          CustomerKey as integer,",
+						"          CustomerID as string,",
+						"          FirstName as string,",
+						"          LastName as string,",
+						"          Gender as string,",
+						"          Email as string,",
+						"          AddressLine1 as string,",
+						"          City as string,",
+						"          State as string,",
+						"          PostalCode as string,",
+						"          Country as string,",
+						"          IsCurrent as boolean",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          CustomerKey,",
+						"          CustomerID,",
+						"          FirstName,",
+						"          LastName,",
+						"          Gender,",
+						"          Email,",
+						"          AddressLine1,",
+						"          City,",
+						"          State,",
+						"          PostalCode,",
+						"          Country,",
+						"          IsCurrent = isCurrent_new",
+						"     )) ~> InsertNewSink"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DataWH_cleanup_to_Blob')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Create_temp_copy_of_DW",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[dbo].[Clear_tempCopy_table]"
+						},
+						"linkedServiceName": {
+							"referenceName": "diljotSQL_DW",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "Copy_clean_data",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "Create_temp_copy_of_DW",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "Copy_clean_data",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "Delete_old_Data",
+						"type": "Script",
+						"dependsOn": [
+							{
+								"activity": "Copy_clean_data",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "diljotSQL_DW",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "Query",
+									"text": "DELETE FROM [dbo].[DimCustomer_tempCopy]\n\tWHERE isCurrent = 0 OR isCurrent IS NULL"
+								}
+							],
+							"scriptBlockExecutionTimeout": "02:00:00"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DeDupl_SQL_to_Blob')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "DeDuplication_SQL",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DeDuplication_SQL",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SendEmail_after_BulkCopy')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "BulkCopy_toBlob",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"policy": {
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "BulkCopy_SQL_to_Blob",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "Send Success Email",
+						"type": "WebActivity",
+						"dependsOn": [
+							{
+								"activity": "BulkCopy_toBlob",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"method": "POST",
+							"headers": {},
+							"url": "https://prod-16.westus2.logic.azure.com:443/workflows/16381019ba95471991159e16fa59c80b/triggers/When_a_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_a_HTTP_request_is_received%2Frun&sv=1.0&sig=8-c28tovtwwilo3knSI4SmDDpHqxJFXRQs3WcMdQra8",
+							"body": {
+								"value": "{\n    \"title\": \"@{pipeline().Pipeline} SUCCEEDED!\",\n    \"message\": \"The Pipeline has been successfully executed\",\n    \"color\": \"Green\",\n    \"dataFactoryName\": \"@{pipeline().DataFactory}\",\n    \"pipelineName\": \"@{pipeline().Pipeline}\",\n    \"pipelineRunId\": \"@{pipeline().RunId}\",\n    \"time\": \"@{utcNow()}\"\n}",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "Send Failed Email",
+						"type": "WebActivity",
+						"dependsOn": [
+							{
+								"activity": "BulkCopy_toBlob",
+								"dependencyConditions": [
+									"Failed"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"method": "POST",
+							"headers": {},
+							"url": "https://prod-16.westus2.logic.azure.com:443/workflows/16381019ba95471991159e16fa59c80b/triggers/When_a_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_a_HTTP_request_is_received%2Frun&sv=1.0&sig=8-c28tovtwwilo3knSI4SmDDpHqxJFXRQs3WcMdQra8",
+							"body": {
+								"value": "{\n    \"title\": \"@{pipeline().Pipeline} FAILED!\",\n    \"message\": \"@{activity('BulkCopy_toBlob').error.message}\",\n    \"color\": \"Red\",\n    \"dataFactoryName\": \"@{pipeline().DataFactory}\",\n    \"pipelineName\": \"@{pipeline().Pipeline}\",\n    \"pipelineRunId\": \"@{pipeline().RunId}\",\n    \"time\": \"@{utcNow()}\"\n}",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/scd1_dataFlow_exec')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "scd1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "scd1",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		}
+	]
+}

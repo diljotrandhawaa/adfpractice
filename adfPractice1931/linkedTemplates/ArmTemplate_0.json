@@ -7,9 +7,17 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "adfPractice1931"
 		},
+		"Cars_Data_Git_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'Cars_Data_Git'"
+		},
 		"adfblobstorageDiljot_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'adfblobstorageDiljot'"
+		},
+		"dataLake_Blob_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'dataLake_Blob'"
 		},
 		"diljotSQL_DB_password": {
 			"type": "secureString",
@@ -18,6 +26,38 @@
 		"diljotSQL_DW_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'diljotSQL_DW'"
+		},
+		"diljotSQL_RawData_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'diljotSQL_RawData'"
+		},
+		"diljotSQL_dataLakeDemo_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'diljotSQL_dataLakeDemo'"
+		},
+		"diljotSQL_incrementalLoad_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'diljotSQL_incrementalLoad'"
+		},
+		"incrementalLoad_Blob_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'incrementalLoad_Blob'"
+		},
+		"incrementalLoad_dataLake_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'incrementalLoad_dataLake'"
+		},
+		"Cars_Data_Git_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://raw.githubusercontent.com/"
+		},
+		"Cars_Data_Git_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "diljotadmin"
+		},
+		"dataLake_Blob_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://incrementalloadfiles.dfs.core.windows.net/"
 		},
 		"diljotSQL_DB_properties_typeProperties_server": {
 			"type": "string",
@@ -42,12 +82,72 @@
 		"diljotSQL_DW_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "diljotadmin"
+		},
+		"diljotSQL_RawData_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "diljotsqlserver1931.database.windows.net"
+		},
+		"diljotSQL_RawData_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "dataLakeDemo_SQL_RawData"
+		},
+		"diljotSQL_RawData_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "diljotadmin"
+		},
+		"diljotSQL_dataLakeDemo_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "diljotsqlserver1931.database.windows.net"
+		},
+		"diljotSQL_dataLakeDemo_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "dataLakeDemo_SQL_DW"
+		},
+		"diljotSQL_dataLakeDemo_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "diljotadmin"
+		},
+		"diljotSQL_incrementalLoad_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "diljotsqlserver1931.database.windows.net"
+		},
+		"diljotSQL_incrementalLoad_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "diljotSQL_incrementalLoad"
+		},
+		"diljotSQL_incrementalLoad_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "diljotadmin"
+		},
+		"incrementalLoad_dataLake_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://incrementalloadfiles.dfs.core.windows.net/"
 		}
 	},
 	"variables": {
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/Cars_Data_Git')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "HttpServer",
+				"typeProperties": {
+					"url": "[parameters('Cars_Data_Git_properties_typeProperties_url')]",
+					"enableServerCertificateValidation": true,
+					"authenticationType": "Basic",
+					"userName": "[parameters('Cars_Data_Git_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('Cars_Data_Git_password')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/adfblobstorageDiljot')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
@@ -57,6 +157,23 @@
 				"type": "AzureBlobStorage",
 				"typeProperties": {
 					"connectionString": "[parameters('adfblobstorageDiljot_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dataLake_Blob')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('dataLake_Blob_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('dataLake_Blob_accountKey')]"
+					}
 				}
 			},
 			"dependsOn": []
@@ -104,6 +221,131 @@
 				}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/diljotSQL_RawData')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"server": "[parameters('diljotSQL_RawData_properties_typeProperties_server')]",
+					"database": "[parameters('diljotSQL_RawData_properties_typeProperties_database')]",
+					"encrypt": "mandatory",
+					"trustServerCertificate": true,
+					"authenticationType": "SQL",
+					"userName": "[parameters('diljotSQL_RawData_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('diljotSQL_RawData_password')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/diljotSQL_dataLakeDemo')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"server": "[parameters('diljotSQL_dataLakeDemo_properties_typeProperties_server')]",
+					"database": "[parameters('diljotSQL_dataLakeDemo_properties_typeProperties_database')]",
+					"encrypt": "mandatory",
+					"trustServerCertificate": true,
+					"authenticationType": "SQL",
+					"userName": "[parameters('diljotSQL_dataLakeDemo_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('diljotSQL_dataLakeDemo_password')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/diljotSQL_incrementalLoad')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"server": "[parameters('diljotSQL_incrementalLoad_properties_typeProperties_server')]",
+					"database": "[parameters('diljotSQL_incrementalLoad_properties_typeProperties_database')]",
+					"encrypt": "mandatory",
+					"trustServerCertificate": true,
+					"authenticationType": "SQL",
+					"userName": "[parameters('diljotSQL_incrementalLoad_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('diljotSQL_incrementalLoad_password')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/incrementalLoad_Blob')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('incrementalLoad_Blob_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/incrementalLoad_dataLake')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('incrementalLoad_dataLake_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('incrementalLoad_dataLake_accountKey')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/BronzeData_Tables')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "diljotSQL_dataLakeDemo",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"tableName": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "DS",
+					"table": {
+						"value": "@dataset().tableName",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/diljotSQL_dataLakeDemo')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/BulkCopyFiles_toBlob')]",
@@ -441,12 +683,40 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/TablesList')]",
+			"name": "[concat(parameters('factoryName'), '/RawData_GetTables')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "diljotSQL_DB",
+					"referenceName": "diljotSQL_RawData",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"tableName": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"table": {
+						"value": "@dataset().tableName",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/diljotSQL_RawData')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/RawData_TablesList')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "diljotSQL_RawData",
 					"type": "LinkedServiceReference"
 				},
 				"annotations": [],
@@ -455,716 +725,7 @@
 				"typeProperties": {}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/diljotSQL_DB')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/carsData_SQL')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "diljotSQL_DB",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [
-					{
-						"name": "ID",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "Name",
-						"type": "varchar"
-					},
-					{
-						"name": "Model",
-						"type": "varchar"
-					},
-					{
-						"name": "Length",
-						"type": "int",
-						"precision": 10
-					}
-				],
-				"typeProperties": {
-					"schema": "dbo",
-					"table": "Cars"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/diljotSQL_DB')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/carsData_csv')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "adfblobstorageDiljot",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"fileName": "dbo_Cars.csv",
-						"container": "bulk-copy-files"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": [
-					{
-						"name": "ID",
-						"type": "String"
-					},
-					{
-						"name": "Name",
-						"type": "String"
-					},
-					{
-						"name": "Model",
-						"type": "String"
-					},
-					{
-						"name": "Length",
-						"type": "String"
-					}
-				]
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/adfblobstorageDiljot')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/customerData_SQL')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "diljotSQL_DW",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [
-					{
-						"name": "CustomerKey",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "CustomerID",
-						"type": "nvarchar"
-					},
-					{
-						"name": "FirstName",
-						"type": "nvarchar"
-					},
-					{
-						"name": "LastName",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Gender",
-						"type": "char"
-					},
-					{
-						"name": "Email",
-						"type": "nvarchar"
-					},
-					{
-						"name": "AddressLine1",
-						"type": "nvarchar"
-					},
-					{
-						"name": "City",
-						"type": "nvarchar"
-					},
-					{
-						"name": "State",
-						"type": "nvarchar"
-					},
-					{
-						"name": "PostalCode",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Country",
-						"type": "nvarchar"
-					},
-					{
-						"name": "IsCurrent",
-						"type": "bit"
-					}
-				],
-				"typeProperties": {
-					"schema": "dbo",
-					"table": "DimCustomer"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/diljotSQL_DW')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/customerData_cleaned')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "adfblobstorageDiljot",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"container": "data-cleanup-archive"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/adfblobstorageDiljot')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/BulkCopy_Blob_to_SQL')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Get Metadata1",
-						"type": "GetMetadata",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataset": {
-								"referenceName": "BulkCopyFiles_toSQL",
-								"type": "DatasetReference",
-								"parameters": {}
-							},
-							"fieldList": [
-								"childItems",
-								"itemName"
-							],
-							"storeSettings": {
-								"type": "AzureBlobStorageReadSettings",
-								"recursive": true,
-								"enablePartitionDiscovery": false
-							},
-							"formatSettings": {
-								"type": "DelimitedTextReadSettings"
-							}
-						}
-					},
-					{
-						"name": "ForEach1",
-						"type": "ForEach",
-						"dependsOn": [
-							{
-								"activity": "Get Metadata1",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@activity('Get Metadata1').output.childItems",
-								"type": "Expression"
-							},
-							"activities": [
-								{
-									"name": "Copy data1",
-									"type": "Copy",
-									"dependsOn": [
-										{
-											"activity": "Truncate Table SP",
-											"dependencyConditions": [
-												"Succeeded"
-											]
-										}
-									],
-									"policy": {
-										"timeout": "0.12:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"source": {
-											"type": "DelimitedTextSource",
-											"storeSettings": {
-												"type": "AzureBlobStorageReadSettings",
-												"recursive": true,
-												"enablePartitionDiscovery": false
-											},
-											"formatSettings": {
-												"type": "DelimitedTextReadSettings"
-											}
-										},
-										"sink": {
-											"type": "AzureSqlSink",
-											"writeBehavior": "insert",
-											"sqlWriterUseTableLock": false
-										},
-										"enableStaging": false,
-										"translator": {
-											"type": "TabularTranslator",
-											"typeConversion": true,
-											"typeConversionSettings": {
-												"allowDataTruncation": true,
-												"treatBooleanAsNumber": false
-											}
-										}
-									},
-									"inputs": [
-										{
-											"referenceName": "BulkCopyFiles_toBlob",
-											"type": "DatasetReference",
-											"parameters": {
-												"fileName": {
-													"value": "@item().name",
-													"type": "Expression"
-												}
-											}
-										}
-									],
-									"outputs": [
-										{
-											"referenceName": "BulkCopySQLTables_toBlob",
-											"type": "DatasetReference",
-											"parameters": {
-												"schemaName": {
-													"value": "@split(replace(item().name,'.csv' ,''), '_')[0]\n\n",
-													"type": "Expression"
-												},
-												"tableName": {
-													"value": "@split(replace(item().name,'.csv' ,''), '_')[1]",
-													"type": "Expression"
-												}
-											}
-										}
-									]
-								},
-								{
-									"name": "Truncate Table SP",
-									"type": "SqlServerStoredProcedure",
-									"dependsOn": [],
-									"policy": {
-										"timeout": "0.12:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"storedProcedureName": "[[dbo].[Truncate_table]",
-										"storedProcedureParameters": {
-											"schemaName": {
-												"value": {
-													"value": "@split(replace(item().name,'.csv' ,''), '_')[0]",
-													"type": "Expression"
-												},
-												"type": "String"
-											},
-											"tableName": {
-												"value": {
-													"value": "@split(replace(item().name,'.csv' ,''), '_')[1]",
-													"type": "Expression"
-												},
-												"type": "String"
-											}
-										}
-									},
-									"linkedServiceName": {
-										"referenceName": "diljotSQL_DB",
-										"type": "LinkedServiceReference"
-									}
-								}
-							]
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/BulkCopyFiles_toSQL')]",
-				"[concat(variables('factoryId'), '/datasets/BulkCopyFiles_toBlob')]",
-				"[concat(variables('factoryId'), '/datasets/BulkCopySQLTables_toBlob')]",
-				"[concat(variables('factoryId'), '/linkedServices/diljotSQL_DB')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/BulkCopy_SQL_to_Blob')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Lookup1",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "AzureSqlSource",
-								"sqlReaderQuery": "select * \nfrom diljotSQL_DB.INFORMATION_SCHEMA.TABLES\nWHERE TABLE_TYPE = 'BASE TABLE'",
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
-							},
-							"dataset": {
-								"referenceName": "TablesList",
-								"type": "DatasetReference",
-								"parameters": {}
-							},
-							"firstRowOnly": false
-						}
-					},
-					{
-						"name": "ForEach1",
-						"type": "ForEach",
-						"dependsOn": [
-							{
-								"activity": "Lookup1",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@activity('Lookup1').output.value",
-								"type": "Expression"
-							},
-							"activities": [
-								{
-									"name": "Copy data1",
-									"type": "Copy",
-									"dependsOn": [],
-									"policy": {
-										"timeout": "0.12:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"source": {
-											"type": "AzureSqlSource",
-											"queryTimeout": "02:00:00",
-											"partitionOption": "None"
-										},
-										"sink": {
-											"type": "DelimitedTextSink",
-											"storeSettings": {
-												"type": "AzureBlobStorageWriteSettings"
-											},
-											"formatSettings": {
-												"type": "DelimitedTextWriteSettings",
-												"quoteAllText": true,
-												"fileExtension": ".txt"
-											}
-										},
-										"enableStaging": false,
-										"translator": {
-											"type": "TabularTranslator",
-											"typeConversion": true,
-											"typeConversionSettings": {
-												"allowDataTruncation": true,
-												"treatBooleanAsNumber": false
-											}
-										}
-									},
-									"inputs": [
-										{
-											"referenceName": "BulkCopySQLTables_toBlob",
-											"type": "DatasetReference",
-											"parameters": {
-												"schemaName": {
-													"value": "@item().table_schema",
-													"type": "Expression"
-												},
-												"tableName": {
-													"value": "@item().table_name",
-													"type": "Expression"
-												}
-											}
-										}
-									],
-									"outputs": [
-										{
-											"referenceName": "BulkCopyFiles_toBlob",
-											"type": "DatasetReference",
-											"parameters": {
-												"fileName": {
-													"value": "@concat(item().table_schema,'_',item().table_name,'.csv')",
-													"type": "Expression"
-												}
-											}
-										}
-									]
-								}
-							]
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"annotations": [],
-				"lastPublishTime": "2025-04-05T02:28:33Z"
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/TablesList')]",
-				"[concat(variables('factoryId'), '/datasets/BulkCopySQLTables_toBlob')]",
-				"[concat(variables('factoryId'), '/datasets/BulkCopyFiles_toBlob')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Copy_clean_data')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "CustomerData_tempCopy",
-								"type": "DatasetReference"
-							},
-							"name": "source1"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "customerData_cleaned",
-								"type": "DatasetReference"
-							},
-							"name": "sink1"
-						}
-					],
-					"transformations": [
-						{
-							"name": "split1"
-						}
-					],
-					"scriptLines": [
-						"source(output(",
-						"          CustomerKey as integer,",
-						"          CustomerID as string,",
-						"          FirstName as string,",
-						"          LastName as string,",
-						"          Gender as string,",
-						"          Email as string,",
-						"          AddressLine1 as string,",
-						"          City as string,",
-						"          State as string,",
-						"          PostalCode as string,",
-						"          Country as string,",
-						"          IsCurrent as boolean",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     isolationLevel: 'READ_UNCOMMITTED',",
-						"     format: 'table') ~> source1",
-						"source1 split(IsCurrent == false() || isNull(IsCurrent),",
-						"     disjoint: false) ~> split1@(oldData, cleanData)",
-						"split1@cleanData sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     partitionFileNames:['DW_cleanup_data.csv'],",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
-						"     partitionBy('hash', 1)) ~> sink1"
-					]
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/CustomerData_tempCopy')]",
-				"[concat(variables('factoryId'), '/datasets/customerData_cleaned')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DW_temp_copy')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "customerData_SQL",
-								"type": "DatasetReference"
-							},
-							"name": "source1"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "CustomerData_tempCopy",
-								"type": "DatasetReference"
-							},
-							"name": "sink1"
-						}
-					],
-					"transformations": [],
-					"scriptLines": [
-						"source(output(",
-						"          CustomerKey as integer,",
-						"          CustomerID as string,",
-						"          FirstName as string,",
-						"          LastName as string,",
-						"          Gender as string,",
-						"          Email as string,",
-						"          AddressLine1 as string,",
-						"          City as string,",
-						"          State as string,",
-						"          PostalCode as string,",
-						"          Country as string,",
-						"          IsCurrent as boolean",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     isolationLevel: 'READ_UNCOMMITTED',",
-						"     format: 'table') ~> source1",
-						"source1 sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     input(",
-						"          CustomerKey as integer,",
-						"          CustomerID as string,",
-						"          FirstName as string,",
-						"          LastName as string,",
-						"          Gender as string,",
-						"          Email as string,",
-						"          AddressLine1 as string,",
-						"          City as string,",
-						"          State as string,",
-						"          PostalCode as string,",
-						"          Country as string,",
-						"          IsCurrent as boolean",
-						"     ),",
-						"     deletable:false,",
-						"     insertable:true,",
-						"     updateable:false,",
-						"     upsertable:false,",
-						"     format: 'table',",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
-						"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
-					]
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/customerData_SQL')]",
-				"[concat(variables('factoryId'), '/datasets/CustomerData_tempCopy')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DeDuplication_SQL')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "Customers_Data_Dupl",
-								"type": "DatasetReference"
-							},
-							"name": "source1"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "CustomersData_DeDupl",
-								"type": "DatasetReference"
-							},
-							"name": "sink1"
-						}
-					],
-					"transformations": [
-						{
-							"name": "RankedByOrderDate"
-						},
-						{
-							"name": "OnlyLatestOrderDate"
-						}
-					],
-					"scriptLines": [
-						"source(output(",
-						"          CustomerID as integer,",
-						"          FirstName as string,",
-						"          LastName as string,",
-						"          Email as string,",
-						"          Country as string,",
-						"          OrderDate as timestamp",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     isolationLevel: 'READ_UNCOMMITTED',",
-						"     format: 'table') ~> source1",
-						"source1 window(over(FirstName,",
-						"          LastName,",
-						"          Email),",
-						"     desc(OrderDate, true),",
-						"     rowNum = rowNumber()) ~> RankedByOrderDate",
-						"RankedByOrderDate filter(rowNum == 1) ~> OnlyLatestOrderDate",
-						"OnlyLatestOrderDate sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     partitionFileNames:['CustomersData_Unique.csv'],",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
-						"     partitionBy('hash', 1)) ~> sink1"
-					]
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/Customers_Data_Dupl')]",
-				"[concat(variables('factoryId'), '/datasets/CustomersData_DeDupl')]"
+				"[concat(variables('factoryId'), '/linkedServices/diljotSQL_RawData')]"
 			]
 		}
 	]

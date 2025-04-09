@@ -1,5 +1,5 @@
 {
-	"name": "BulkCopy_SQL_to_Blob_copy1",
+	"name": "BulkCopy_RawData_to_Bronze",
 	"properties": {
 		"activities": [
 			{

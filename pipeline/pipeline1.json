@@ -17,7 +17,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
-						"sqlReaderQuery": "SELECT MAX(DATE_ID) FROM CarSalesData;",
+						"sqlReaderQuery": "SELECT MAX(DATE_ID) AS max_date FROM CarSalesData;",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
@@ -63,8 +63,6 @@
 			{
 				"name": "Copy data1",
 				"type": "Copy",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "Current_Load",
@@ -90,11 +88,31 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
-						"sqlReaderQuery": "",
+						"sqlReaderQuery": {
+							"value": "SELECT * FROM CarSalesData\nWHERE DATE_ID > '@{activity('Last_Load').output.value[0].last_load}'\nAND DATE_ID <= '@{activity('Current_Load').output.value[0].max_date}'",
+							"type": "Expression"
+						},
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
-					"enableStaging": false
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "ParquetWriteSettings"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
 				},
 				"inputs": [
 					{
@@ -104,7 +122,54 @@
 							"tableName": "CarSalesData"
 						}
 					}
+				],
+				"outputs": [
+					{
+						"referenceName": "dataLake_CarsData",
+						"type": "DatasetReference",
+						"parameters": {
+							"fileName": {
+								"value": "@concat('CarsData_',utcNow())",
+								"type": "Expression"
+							}
+						}
+					}
 				]
+			},
+			{
+				"name": "Stored procedure1",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "Copy data1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[Update_WaterMark_table]",
+					"storedProcedureParameters": {
+						"lastLoad": {
+							"value": {
+								"value": "@activity('Current_Load').output.value[0].max_date",
+								"type": "Expression"
+							}
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "diljotSQL_incrementalLoad",
+					"type": "LinkedServiceReference"
+				}
 			}
 		],
 		"annotations": []

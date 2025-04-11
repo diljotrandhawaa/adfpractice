@@ -1,5 +1,5 @@
 {
-	"name": "Olympic_data",
+	"name": "Olympic_data_git",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "Cars_Data_Git",

@@ -16,8 +16,6 @@
 						{
 							"name": "Copy data1",
 							"type": "Copy",
-							"state": "Inactive",
-							"onInactiveMarkAs": "Succeeded",
 							"dependsOn": [],
 							"policy": {
 								"timeout": "0.12:00:00",
@@ -38,29 +36,51 @@
 										"type": "DelimitedTextReadSettings"
 									}
 								},
-								"enableStaging": false
+								"sink": {
+									"type": "DelimitedTextSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									},
+									"formatSettings": {
+										"type": "DelimitedTextWriteSettings",
+										"quoteAllText": true,
+										"fileExtension": ".txt"
+									}
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
 							},
 							"inputs": [
 								{
 									"referenceName": "Olympic_data",
 									"type": "DatasetReference",
 									"parameters": {
-										"data_file": {
+										"data_file_git": {
 											"value": "@item()",
 											"type": "Expression"
 										}
 									}
 								}
+							],
+							"outputs": [
+								{
+									"referenceName": "Olympic_dataset",
+									"type": "DatasetReference",
+									"parameters": {
+										"data_file": {
+											"value": "@concat(item(), '.csv')",
+											"type": "Expression"
+										}
+									}
+								}
 							]
-						},
-						{
-							"name": "Wait1",
-							"type": "Wait",
-							"dependsOn": [],
-							"userProperties": [],
-							"typeProperties": {
-								"waitTimeInSeconds": 5
-							}
 						}
 					]
 				}

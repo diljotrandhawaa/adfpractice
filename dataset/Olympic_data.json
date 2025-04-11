@@ -16,7 +16,7 @@
 			"location": {
 				"type": "HttpServerLocation",
 				"relativeUrl": {
-					"value": "@concat(\n    'darshilparmar/tokyo-olympic-azure-data-engineering-project/main/data/', \n    dataset().data_file_git,\n    '.csv'\n)",
+					"value": "@concat(\n    'diljotrandhawaa/tokyo-olympic-azure-data-engineering-project/main/Raw-data_Step_1/', \n    dataset().data_file_git,\n    '.csv'\n)",
 					"type": "Expression"
 				}
 			},

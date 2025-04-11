@@ -59,7 +59,7 @@
 							},
 							"inputs": [
 								{
-									"referenceName": "Olympic_data",
+									"referenceName": "Olympic_data_git",
 									"type": "DatasetReference",
 									"parameters": {
 										"data_file_git": {
@@ -71,7 +71,7 @@
 							],
 							"outputs": [
 								{
-									"referenceName": "Olympic_dataset",
+									"referenceName": "Olympic_dataset_blob",
 									"type": "DatasetReference",
 									"parameters": {
 										"data_file": {

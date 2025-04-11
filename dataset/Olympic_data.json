@@ -1,0 +1,30 @@
+{
+	"name": "Olympic_data",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Cars_Data_Git",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"data_file": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "HttpServerLocation",
+				"relativeUrl": {
+					"value": "@concat(\n    'darshilparmar/tokyo-olympic-azure-data-engineering-project/blob/main/data/', \n    dataset().data_file,\n    '.csv'\n)",
+					"type": "Expression"
+				}
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": false,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}

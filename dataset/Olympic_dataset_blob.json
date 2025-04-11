@@ -1,5 +1,5 @@
 {
-	"name": "Olympic_dataset",
+	"name": "Olympic_dataset_blob",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "OlympicDataStorage",

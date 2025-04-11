@@ -1,0 +1,32 @@
+{
+	"name": "Olympic_dataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "OlympicDataStorage",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"data_file": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@dataset().data_file",
+					"type": "Expression"
+				},
+				"folderPath": "raw-data",
+				"fileSystem": "olympic-container"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}

@@ -1,5 +1,5 @@
 {
-	"name": "customerData_SQL",
+	"name": "staging_customers",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "diljotSQL_DW",
@@ -9,21 +9,16 @@
 		"type": "AzureSqlTable",
 		"schema": [
 			{
-				"name": "CustomerKey",
-				"type": "int",
-				"precision": 10
-			},
-			{
 				"name": "CustomerID",
-				"type": "nvarchar"
+				"type": "varchar"
 			},
 			{
 				"name": "FirstName",
-				"type": "nvarchar"
+				"type": "varchar"
 			},
 			{
 				"name": "LastName",
-				"type": "nvarchar"
+				"type": "varchar"
 			},
 			{
 				"name": "Gender",
@@ -31,36 +26,32 @@
 			},
 			{
 				"name": "Email",
-				"type": "nvarchar"
+				"type": "varchar"
 			},
 			{
 				"name": "AddressLine1",
-				"type": "nvarchar"
+				"type": "varchar"
 			},
 			{
 				"name": "City",
-				"type": "nvarchar"
+				"type": "varchar"
 			},
 			{
 				"name": "State",
-				"type": "nvarchar"
+				"type": "varchar"
 			},
 			{
 				"name": "PostalCode",
-				"type": "nvarchar"
+				"type": "varchar"
 			},
 			{
 				"name": "Country",
-				"type": "nvarchar"
-			},
-			{
-				"name": "IsCurrent",
-				"type": "bit"
+				"type": "varchar"
 			}
 		],
 		"typeProperties": {
 			"schema": "dbo",
-			"table": "DimCustomer"
+			"table": "staging_customers"
 		}
 	},
 	"type": "Microsoft.DataFactory/factories/datasets"

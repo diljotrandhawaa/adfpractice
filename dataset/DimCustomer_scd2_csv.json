@@ -1,5 +1,5 @@
 {
-	"name": "CustomerDataDW_csv",
+	"name": "DimCustomer_scd2_csv",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "adfblobstorageDiljot",
@@ -10,7 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "customerDataDW_csv",
+				"fileName": "dbo.DimCustomer_scd2.csv",
 				"container": "bulk-copy-files"
 			},
 			"columnDelimiter": ",",
@@ -20,47 +20,19 @@
 		},
 		"schema": [
 			{
-				"name": "CustomerKey",
+				"name": "ID",
 				"type": "String"
 			},
 			{
-				"name": "CustomerID",
+				"name": "Name",
 				"type": "String"
 			},
 			{
-				"name": "FirstName",
+				"name": "Model",
 				"type": "String"
 			},
 			{
-				"name": "LastName",
-				"type": "String"
-			},
-			{
-				"name": "Gender",
-				"type": "String"
-			},
-			{
-				"name": "Email",
-				"type": "String"
-			},
-			{
-				"name": "AddressLine1",
-				"type": "String"
-			},
-			{
-				"name": "City",
-				"type": "String"
-			},
-			{
-				"name": "State",
-				"type": "String"
-			},
-			{
-				"name": "PostalCode",
-				"type": "String"
-			},
-			{
-				"name": "Country",
+				"name": "Length",
 				"type": "String"
 			}
 		]

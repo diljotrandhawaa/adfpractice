@@ -62,5 +62,6 @@
 			"schema": "dbo",
 			"table": "DimCustomer_tempCopy"
 		}
-	}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
 }

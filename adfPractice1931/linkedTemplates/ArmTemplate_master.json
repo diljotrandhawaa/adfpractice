@@ -1,0 +1,285 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "adfPractice1931"
+		},
+		"Cars_Data_Git_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'Cars_Data_Git'"
+		},
+		"adfblobstorageDiljot_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'adfblobstorageDiljot'"
+		},
+		"dataLake_Blob_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'dataLake_Blob'"
+		},
+		"diljotSQL_DB_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'diljotSQL_DB'"
+		},
+		"diljotSQL_DW_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'diljotSQL_DW'"
+		},
+		"diljotSQL_RawData_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'diljotSQL_RawData'"
+		},
+		"diljotSQL_dataLakeDemo_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'diljotSQL_dataLakeDemo'"
+		},
+		"diljotSQL_incrementalLoad_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'diljotSQL_incrementalLoad'"
+		},
+		"incrementalLoad_Blob_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'incrementalLoad_Blob'"
+		},
+		"incrementalLoad_dataLake_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'incrementalLoad_dataLake'"
+		},
+		"Cars_Data_Git_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://raw.githubusercontent.com/"
+		},
+		"Cars_Data_Git_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "diljotadmin"
+		},
+		"dataLake_Blob_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://incrementalloadfiles.dfs.core.windows.net/"
+		},
+		"diljotSQL_DB_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "diljotsqlserver1931.database.windows.net"
+		},
+		"diljotSQL_DB_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "diljotSQL_DB"
+		},
+		"diljotSQL_DB_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "diljotadmin"
+		},
+		"diljotSQL_DW_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "diljotsqlserver1931.database.windows.net"
+		},
+		"diljotSQL_DW_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "diljotSQL_DW"
+		},
+		"diljotSQL_DW_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "diljotadmin"
+		},
+		"diljotSQL_RawData_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "diljotsqlserver1931.database.windows.net"
+		},
+		"diljotSQL_RawData_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "dataLakeDemo_SQL_RawData"
+		},
+		"diljotSQL_RawData_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "diljotadmin"
+		},
+		"diljotSQL_dataLakeDemo_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "diljotsqlserver1931.database.windows.net"
+		},
+		"diljotSQL_dataLakeDemo_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "dataLakeDemo_SQL_DW"
+		},
+		"diljotSQL_dataLakeDemo_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "diljotadmin"
+		},
+		"diljotSQL_incrementalLoad_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "diljotsqlserver1931.database.windows.net"
+		},
+		"diljotSQL_incrementalLoad_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "diljotSQL_incrementalLoad"
+		},
+		"diljotSQL_incrementalLoad_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "diljotadmin"
+		},
+		"incrementalLoad_dataLake_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://incrementalloadfiles.dfs.core.windows.net/"
+		},
+		"containerUri": {
+			"type": "string",
+			"metadata": "URI to storage account containing linked ARM templates"
+		},
+		"containerSasToken": {
+			"type": "string",
+			"metadata": "Sas token to storage account containing linked ARM templates"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "adfPractice1931_ArmTemplate_0",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2024-03-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_0.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"Cars_Data_Git_password": {
+						"value": "[parameters('Cars_Data_Git_password')]"
+					},
+					"adfblobstorageDiljot_connectionString": {
+						"value": "[parameters('adfblobstorageDiljot_connectionString')]"
+					},
+					"dataLake_Blob_accountKey": {
+						"value": "[parameters('dataLake_Blob_accountKey')]"
+					},
+					"diljotSQL_DB_password": {
+						"value": "[parameters('diljotSQL_DB_password')]"
+					},
+					"diljotSQL_DW_password": {
+						"value": "[parameters('diljotSQL_DW_password')]"
+					},
+					"diljotSQL_RawData_password": {
+						"value": "[parameters('diljotSQL_RawData_password')]"
+					},
+					"diljotSQL_dataLakeDemo_password": {
+						"value": "[parameters('diljotSQL_dataLakeDemo_password')]"
+					},
+					"diljotSQL_incrementalLoad_password": {
+						"value": "[parameters('diljotSQL_incrementalLoad_password')]"
+					},
+					"incrementalLoad_Blob_connectionString": {
+						"value": "[parameters('incrementalLoad_Blob_connectionString')]"
+					},
+					"incrementalLoad_dataLake_accountKey": {
+						"value": "[parameters('incrementalLoad_dataLake_accountKey')]"
+					},
+					"Cars_Data_Git_properties_typeProperties_url": {
+						"value": "[parameters('Cars_Data_Git_properties_typeProperties_url')]"
+					},
+					"Cars_Data_Git_properties_typeProperties_userName": {
+						"value": "[parameters('Cars_Data_Git_properties_typeProperties_userName')]"
+					},
+					"dataLake_Blob_properties_typeProperties_url": {
+						"value": "[parameters('dataLake_Blob_properties_typeProperties_url')]"
+					},
+					"diljotSQL_DB_properties_typeProperties_server": {
+						"value": "[parameters('diljotSQL_DB_properties_typeProperties_server')]"
+					},
+					"diljotSQL_DB_properties_typeProperties_database": {
+						"value": "[parameters('diljotSQL_DB_properties_typeProperties_database')]"
+					},
+					"diljotSQL_DB_properties_typeProperties_userName": {
+						"value": "[parameters('diljotSQL_DB_properties_typeProperties_userName')]"
+					},
+					"diljotSQL_DW_properties_typeProperties_server": {
+						"value": "[parameters('diljotSQL_DW_properties_typeProperties_server')]"
+					},
+					"diljotSQL_DW_properties_typeProperties_database": {
+						"value": "[parameters('diljotSQL_DW_properties_typeProperties_database')]"
+					},
+					"diljotSQL_DW_properties_typeProperties_userName": {
+						"value": "[parameters('diljotSQL_DW_properties_typeProperties_userName')]"
+					},
+					"diljotSQL_RawData_properties_typeProperties_server": {
+						"value": "[parameters('diljotSQL_RawData_properties_typeProperties_server')]"
+					},
+					"diljotSQL_RawData_properties_typeProperties_database": {
+						"value": "[parameters('diljotSQL_RawData_properties_typeProperties_database')]"
+					},
+					"diljotSQL_RawData_properties_typeProperties_userName": {
+						"value": "[parameters('diljotSQL_RawData_properties_typeProperties_userName')]"
+					},
+					"diljotSQL_dataLakeDemo_properties_typeProperties_server": {
+						"value": "[parameters('diljotSQL_dataLakeDemo_properties_typeProperties_server')]"
+					},
+					"diljotSQL_dataLakeDemo_properties_typeProperties_database": {
+						"value": "[parameters('diljotSQL_dataLakeDemo_properties_typeProperties_database')]"
+					},
+					"diljotSQL_dataLakeDemo_properties_typeProperties_userName": {
+						"value": "[parameters('diljotSQL_dataLakeDemo_properties_typeProperties_userName')]"
+					},
+					"diljotSQL_incrementalLoad_properties_typeProperties_server": {
+						"value": "[parameters('diljotSQL_incrementalLoad_properties_typeProperties_server')]"
+					},
+					"diljotSQL_incrementalLoad_properties_typeProperties_database": {
+						"value": "[parameters('diljotSQL_incrementalLoad_properties_typeProperties_database')]"
+					},
+					"diljotSQL_incrementalLoad_properties_typeProperties_userName": {
+						"value": "[parameters('diljotSQL_incrementalLoad_properties_typeProperties_userName')]"
+					},
+					"incrementalLoad_dataLake_properties_typeProperties_url": {
+						"value": "[parameters('incrementalLoad_dataLake_properties_typeProperties_url')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "adfPractice1931_ArmTemplate_1",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2024-03-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_1.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'adfPractice1931_ArmTemplate_0')]"
+			]
+		},
+		{
+			"name": "adfPractice1931_ArmTemplate_2",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2024-03-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_2.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'adfPractice1931_ArmTemplate_1')]"
+			]
+		}
+	]
+}

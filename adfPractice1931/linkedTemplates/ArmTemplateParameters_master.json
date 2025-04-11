@@ -1,0 +1,102 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "adfPractice1931"
+		},
+		"Cars_Data_Git_password": {
+			"value": ""
+		},
+		"adfblobstorageDiljot_connectionString": {
+			"value": ""
+		},
+		"dataLake_Blob_accountKey": {
+			"value": ""
+		},
+		"diljotSQL_DB_password": {
+			"value": ""
+		},
+		"diljotSQL_DW_password": {
+			"value": ""
+		},
+		"diljotSQL_RawData_password": {
+			"value": ""
+		},
+		"diljotSQL_dataLakeDemo_password": {
+			"value": ""
+		},
+		"diljotSQL_incrementalLoad_password": {
+			"value": ""
+		},
+		"incrementalLoad_Blob_connectionString": {
+			"value": ""
+		},
+		"incrementalLoad_dataLake_accountKey": {
+			"value": ""
+		},
+		"Cars_Data_Git_properties_typeProperties_url": {
+			"value": "https://raw.githubusercontent.com/"
+		},
+		"Cars_Data_Git_properties_typeProperties_userName": {
+			"value": "diljotadmin"
+		},
+		"dataLake_Blob_properties_typeProperties_url": {
+			"value": "https://incrementalloadfiles.dfs.core.windows.net/"
+		},
+		"diljotSQL_DB_properties_typeProperties_server": {
+			"value": "diljotsqlserver1931.database.windows.net"
+		},
+		"diljotSQL_DB_properties_typeProperties_database": {
+			"value": "diljotSQL_DB"
+		},
+		"diljotSQL_DB_properties_typeProperties_userName": {
+			"value": "diljotadmin"
+		},
+		"diljotSQL_DW_properties_typeProperties_server": {
+			"value": "diljotsqlserver1931.database.windows.net"
+		},
+		"diljotSQL_DW_properties_typeProperties_database": {
+			"value": "diljotSQL_DW"
+		},
+		"diljotSQL_DW_properties_typeProperties_userName": {
+			"value": "diljotadmin"
+		},
+		"diljotSQL_RawData_properties_typeProperties_server": {
+			"value": "diljotsqlserver1931.database.windows.net"
+		},
+		"diljotSQL_RawData_properties_typeProperties_database": {
+			"value": "dataLakeDemo_SQL_RawData"
+		},
+		"diljotSQL_RawData_properties_typeProperties_userName": {
+			"value": "diljotadmin"
+		},
+		"diljotSQL_dataLakeDemo_properties_typeProperties_server": {
+			"value": "diljotsqlserver1931.database.windows.net"
+		},
+		"diljotSQL_dataLakeDemo_properties_typeProperties_database": {
+			"value": "dataLakeDemo_SQL_DW"
+		},
+		"diljotSQL_dataLakeDemo_properties_typeProperties_userName": {
+			"value": "diljotadmin"
+		},
+		"diljotSQL_incrementalLoad_properties_typeProperties_server": {
+			"value": "diljotsqlserver1931.database.windows.net"
+		},
+		"diljotSQL_incrementalLoad_properties_typeProperties_database": {
+			"value": "diljotSQL_incrementalLoad"
+		},
+		"diljotSQL_incrementalLoad_properties_typeProperties_userName": {
+			"value": "diljotadmin"
+		},
+		"incrementalLoad_dataLake_properties_typeProperties_url": {
+			"value": "https://incrementalloadfiles.dfs.core.windows.net/"
+		},
+		"containerUri": {
+			"value": ""
+		},
+		"containerSasToken": {
+			"value": ""
+		}
+	}
+}

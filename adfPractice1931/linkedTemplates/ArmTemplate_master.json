@@ -11,6 +11,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'Cars_Data_Git'"
 		},
+		"OlympicDataStorage_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'OlympicDataStorage'"
+		},
 		"adfblobstorageDiljot_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'adfblobstorageDiljot'"
@@ -54,6 +58,10 @@
 		"Cars_Data_Git_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "diljotadmin"
+		},
+		"OlympicDataStorage_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://olympicprojectstorage.dfs.core.windows.net/"
 		},
 		"dataLake_Blob_properties_typeProperties_url": {
 			"type": "string",
@@ -153,6 +161,9 @@
 					"Cars_Data_Git_password": {
 						"value": "[parameters('Cars_Data_Git_password')]"
 					},
+					"OlympicDataStorage_accountKey": {
+						"value": "[parameters('OlympicDataStorage_accountKey')]"
+					},
 					"adfblobstorageDiljot_connectionString": {
 						"value": "[parameters('adfblobstorageDiljot_connectionString')]"
 					},
@@ -185,6 +196,9 @@
 					},
 					"Cars_Data_Git_properties_typeProperties_userName": {
 						"value": "[parameters('Cars_Data_Git_properties_typeProperties_userName')]"
+					},
+					"OlympicDataStorage_properties_typeProperties_url": {
+						"value": "[parameters('OlympicDataStorage_properties_typeProperties_url')]"
 					},
 					"dataLake_Blob_properties_typeProperties_url": {
 						"value": "[parameters('dataLake_Blob_properties_typeProperties_url')]"

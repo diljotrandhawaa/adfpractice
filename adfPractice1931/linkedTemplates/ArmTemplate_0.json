@@ -11,6 +11,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'Cars_Data_Git'"
 		},
+		"OlympicDataStorage_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'OlympicDataStorage'"
+		},
 		"adfblobstorageDiljot_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'adfblobstorageDiljot'"
@@ -54,6 +58,10 @@
 		"Cars_Data_Git_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "diljotadmin"
+		},
+		"OlympicDataStorage_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://olympicprojectstorage.dfs.core.windows.net/"
 		},
 		"dataLake_Blob_properties_typeProperties_url": {
 			"type": "string",
@@ -143,6 +151,23 @@
 					"password": {
 						"type": "SecureString",
 						"value": "[parameters('Cars_Data_Git_password')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/OlympicDataStorage')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('OlympicDataStorage_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('OlympicDataStorage_accountKey')]"
 					}
 				}
 			},
@@ -751,51 +776,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/diljotSQL_DW')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DimCustomer_scd2_csv')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "adfblobstorageDiljot",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"fileName": "dbo.DimCustomer_scd2.csv",
-						"container": "bulk-copy-files"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": [
-					{
-						"name": "ID",
-						"type": "String"
-					},
-					{
-						"name": "Name",
-						"type": "String"
-					},
-					{
-						"name": "Model",
-						"type": "String"
-					},
-					{
-						"name": "Length",
-						"type": "String"
-					}
-				]
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/adfblobstorageDiljot')]"
 			]
 		}
 	]

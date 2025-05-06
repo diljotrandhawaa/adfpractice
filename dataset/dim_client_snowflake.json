@@ -1,0 +1,41 @@
+{
+	"name": "dim_client_snowflake",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Snowflake1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SnowflakeV2Table",
+		"schema": [
+			{
+				"name": "ID",
+				"type": "NUMBER",
+				"precision": 38,
+				"scale": 0
+			},
+			{
+				"name": "NAME",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "PHONE",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "EMAIL",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "LOCATION_ID",
+				"type": "NUMBER",
+				"precision": 38,
+				"scale": 0
+			}
+		],
+		"typeProperties": {
+			"schema": "RAW",
+			"table": "DIM_CLIENT"
+		}
+	}
+}

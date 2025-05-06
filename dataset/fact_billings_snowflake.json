@@ -1,0 +1,49 @@
+{
+	"name": "fact_billings_snowflake",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Snowflake1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SnowflakeV2Table",
+		"schema": [
+			{
+				"name": "INVOICE_ID",
+				"type": "NUMBER",
+				"precision": 38,
+				"scale": 0
+			},
+			{
+				"name": "MATTER_ID",
+				"type": "NUMBER",
+				"precision": 38,
+				"scale": 0
+			},
+			{
+				"name": "CLIENT_ID",
+				"type": "NUMBER",
+				"precision": 38,
+				"scale": 0
+			},
+			{
+				"name": "INVOICE_AMOUNT",
+				"type": "NUMBER",
+				"precision": 12,
+				"scale": 2
+			},
+			{
+				"name": "INVOICE_DATE",
+				"type": "DATE"
+			},
+			{
+				"name": "STATUS",
+				"type": "VARCHAR"
+			}
+		],
+		"typeProperties": {
+			"schema": "RAW",
+			"table": "FACT_BILLINGS"
+		}
+	}
+}

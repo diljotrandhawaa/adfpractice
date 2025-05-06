@@ -1,0 +1,55 @@
+{
+	"name": "fact_legalmatters_snowflake",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Snowflake1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SnowflakeV2Table",
+		"schema": [
+			{
+				"name": "MATTER_ID",
+				"type": "NUMBER",
+				"precision": 38,
+				"scale": 0
+			},
+			{
+				"name": "CLIENT_ID",
+				"type": "NUMBER",
+				"precision": 38,
+				"scale": 0
+			},
+			{
+				"name": "LAWYER_ID",
+				"type": "NUMBER",
+				"precision": 38,
+				"scale": 0
+			},
+			{
+				"name": "CASE_TYPE",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "START_DATE",
+				"type": "DATE"
+			},
+			{
+				"name": "END_DATE",
+				"type": "DATE"
+			},
+			{
+				"name": "CASE_STATUS",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "OUTCOME",
+				"type": "VARCHAR"
+			}
+		],
+		"typeProperties": {
+			"schema": "RAW",
+			"table": "FACT_LEGALMATTERS"
+		}
+	}
+}

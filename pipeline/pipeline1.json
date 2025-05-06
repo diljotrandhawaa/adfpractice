@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Copy data1",
+				"name": "Copy dim_lawyer",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -23,7 +23,8 @@
 							"enablePartitionDiscovery": false
 						},
 						"formatSettings": {
-							"type": "DelimitedTextReadSettings"
+							"type": "DelimitedTextReadSettings",
+							"skipLineCount": 1
 						}
 					},
 					"sink": {
@@ -32,13 +33,20 @@
 							"type": "SnowflakeImportCopyCommand"
 						}
 					},
-					"enableStaging": false,
+					"enableStaging": true,
+					"stagingSettings": {
+						"linkedServiceName": {
+							"referenceName": "law_firm_blobstorage",
+							"type": "LinkedServiceReference"
+						},
+						"path": "staging-container"
+					},
 					"translator": {
 						"type": "TabularTranslator",
 						"mappings": [
 							{
 								"source": {
-									"type": "String",
+									"type": "Int32",
 									"ordinal": 1
 								},
 								"sink": {
@@ -58,7 +66,7 @@
 							},
 							{
 								"source": {
-									"type": "String",
+									"type": "Int32",
 									"ordinal": 3
 								},
 								"sink": {
@@ -68,7 +76,7 @@
 							},
 							{
 								"source": {
-									"type": "String",
+									"type": "Int32",
 									"ordinal": 4
 								},
 								"sink": {
@@ -88,6 +96,40 @@
 				"outputs": [
 					{
 						"referenceName": "dim_lawyer_snowflake",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "Copy dim_location",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobStorageReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings",
+							"skipLineCount": 1
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "locations_csv",
 						"type": "DatasetReference"
 					}
 				]

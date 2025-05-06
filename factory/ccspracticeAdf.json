@@ -1,0 +1,9 @@
+{
+	"name": "ccspracticeAdf",
+	"location": "westus2",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "ab7aa9db-3364-42b7-9d89-e287b1792d04",
+		"tenantId": "0966fd38-2cc1-4b93-960f-96ebb8b1e32c"
+	}
+}

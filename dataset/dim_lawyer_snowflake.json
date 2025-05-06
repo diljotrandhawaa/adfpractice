@@ -1,0 +1,39 @@
+{
+	"name": "dim_lawyer_snowflake",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Snowflake1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SnowflakeV2Table",
+		"schema": [
+			{
+				"name": "ID",
+				"type": "NUMBER",
+				"precision": 38,
+				"scale": 0
+			},
+			{
+				"name": "NAME",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "OFFICE_ID",
+				"type": "NUMBER",
+				"precision": 38,
+				"scale": 0
+			},
+			{
+				"name": "PRACTICE_AREA_ID",
+				"type": "NUMBER",
+				"precision": 38,
+				"scale": 0
+			}
+		],
+		"typeProperties": {
+			"schema": "RAW",
+			"table": "DIM_LAWYER"
+		}
+	}
+}

@@ -33,6 +33,51 @@
 							"type": "LinkedServiceReference"
 						},
 						"path": "staging-container"
+					},
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "ID",
+									"type": "Int64"
+								},
+								"sink": {
+									"name": "id",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"name": "NAME",
+									"type": "String"
+								},
+								"sink": {
+									"name": "name",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "OFFICE_ID",
+									"type": "Int64"
+								},
+								"sink": {
+									"name": "office_id",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"name": "PRACTICE_AREA_ID",
+									"type": "Int64"
+								},
+								"sink": {
+									"name": "practice_area_id",
+									"type": "Int32"
+								}
+							}
+						]
 					}
 				},
 				"inputs": [

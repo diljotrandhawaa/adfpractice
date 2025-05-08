@@ -26,14 +26,21 @@
 						"writeBehavior": "insert",
 						"sqlWriterUseTableLock": false
 					},
-					"enableStaging": false
+					"enableStaging": true,
+					"stagingSettings": {
+						"linkedServiceName": {
+							"referenceName": "stagingForLawFirm",
+							"type": "LinkedServiceReference"
+						},
+						"path": "staging-container"
+					}
 				},
 				"inputs": [
 					{
 						"referenceName": "snowflakeTable_lawfirm",
 						"type": "DatasetReference",
 						"parameters": {
-							"tablename": "dim_lawyer"
+							"tablename": "DIM_LAWYER"
 						}
 					}
 				],

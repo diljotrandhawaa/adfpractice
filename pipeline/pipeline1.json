@@ -15,8 +15,37 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
+					"source": {
+						"type": "SnowflakeV2Source",
+						"exportSettings": {
+							"type": "SnowflakeExportCopyCommand"
+						}
+					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false
+					},
 					"enableStaging": false
-				}
+				},
+				"inputs": [
+					{
+						"referenceName": "snowflakeTable_lawfirm",
+						"type": "DatasetReference",
+						"parameters": {
+							"tablename": "dim_lawyer"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "table_lawfirmTransData",
+						"type": "DatasetReference",
+						"parameters": {
+							"tableName": "dim_lawyer"
+						}
+					}
+				]
 			}
 		],
 		"annotations": []

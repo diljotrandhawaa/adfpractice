@@ -1,9 +1,9 @@
 {
-	"name": "pipeline1",
+	"name": "Trans data to Azure SQL",
 	"properties": {
 		"activities": [
 			{
-				"name": "Copy data1",
+				"name": "Copy dim_lawyer",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -95,6 +95,628 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"tableName": "dim_lawyer"
+						}
+					}
+				]
+			},
+			{
+				"name": "Copy dim_location",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SnowflakeV2Source",
+						"exportSettings": {
+							"type": "SnowflakeExportCopyCommand"
+						}
+					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false
+					},
+					"enableStaging": true,
+					"stagingSettings": {
+						"linkedServiceName": {
+							"referenceName": "stagingForLawFirm",
+							"type": "LinkedServiceReference"
+						},
+						"path": "staging-container"
+					},
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "ID",
+									"type": "Int64"
+								},
+								"sink": {
+									"name": "id",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"name": "BUILDING_NAME",
+									"type": "String"
+								},
+								"sink": {
+									"name": "building_name",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "CITY",
+									"type": "String"
+								},
+								"sink": {
+									"name": "city",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "STATE",
+									"type": "String"
+								},
+								"sink": {
+									"name": "state",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "COUNTRY",
+									"type": "String"
+								},
+								"sink": {
+									"name": "country",
+									"type": "String"
+								}
+							}
+						]
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "snowflakeTable_lawfirm",
+						"type": "DatasetReference",
+						"parameters": {
+							"tablename": "DIM_LOCATION"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "table_lawfirmTransData",
+						"type": "DatasetReference",
+						"parameters": {
+							"tableName": "dim_location"
+						}
+					}
+				]
+			},
+			{
+				"name": "Copy dim_client",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SnowflakeV2Source",
+						"exportSettings": {
+							"type": "SnowflakeExportCopyCommand"
+						}
+					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false
+					},
+					"enableStaging": true,
+					"stagingSettings": {
+						"linkedServiceName": {
+							"referenceName": "stagingForLawFirm",
+							"type": "LinkedServiceReference"
+						},
+						"path": "staging-container"
+					},
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "ID",
+									"type": "Int64"
+								},
+								"sink": {
+									"name": "id",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"name": "NAME",
+									"type": "String"
+								},
+								"sink": {
+									"name": "name",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "PHONE",
+									"type": "String"
+								},
+								"sink": {
+									"name": "phone",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "EMAIL",
+									"type": "String"
+								},
+								"sink": {
+									"name": "email",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "LOCATION_ID",
+									"type": "Int64"
+								},
+								"sink": {
+									"name": "location_id",
+									"type": "Int32"
+								}
+							}
+						]
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "snowflakeTable_lawfirm",
+						"type": "DatasetReference",
+						"parameters": {
+							"tablename": "DIM_CLIENT"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "table_lawfirmTransData",
+						"type": "DatasetReference",
+						"parameters": {
+							"tableName": "dim_client"
+						}
+					}
+				]
+			},
+			{
+				"name": "Copy dim_practice_area",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SnowflakeV2Source",
+						"exportSettings": {
+							"type": "SnowflakeExportCopyCommand"
+						}
+					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false
+					},
+					"enableStaging": true,
+					"stagingSettings": {
+						"linkedServiceName": {
+							"referenceName": "stagingForLawFirm",
+							"type": "LinkedServiceReference"
+						},
+						"path": "staging-container"
+					},
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "ID",
+									"type": "Int64"
+								},
+								"sink": {
+									"name": "id",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"name": "PRACTICE_AREA",
+									"type": "String"
+								},
+								"sink": {
+									"name": "practice_area",
+									"type": "String"
+								}
+							}
+						]
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "snowflakeTable_lawfirm",
+						"type": "DatasetReference",
+						"parameters": {
+							"tablename": "DIM_PRACTICEAREA"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "table_lawfirmTransData",
+						"type": "DatasetReference",
+						"parameters": {
+							"tableName": "dim_practicearea"
+						}
+					}
+				]
+			},
+			{
+				"name": "Copy fact_legalmatters",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SnowflakeV2Source",
+						"exportSettings": {
+							"type": "SnowflakeExportCopyCommand"
+						}
+					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false
+					},
+					"enableStaging": true,
+					"stagingSettings": {
+						"linkedServiceName": {
+							"referenceName": "stagingForLawFirm",
+							"type": "LinkedServiceReference"
+						},
+						"path": "staging-container"
+					},
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "CLIENT_ID",
+									"type": "Int64"
+								},
+								"sink": {
+									"name": "client_id",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"name": "LAWYER_ID",
+									"type": "Int64"
+								},
+								"sink": {
+									"name": "lawyer_id",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"name": "CASE_TYPE",
+									"type": "String"
+								},
+								"sink": {
+									"name": "case_type",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "START_DATE",
+									"type": "DateTime"
+								},
+								"sink": {
+									"name": "start_date",
+									"type": "DateTime"
+								}
+							},
+							{
+								"source": {
+									"name": "END_DATE",
+									"type": "DateTime"
+								},
+								"sink": {
+									"name": "end_date",
+									"type": "DateTime"
+								}
+							},
+							{
+								"source": {
+									"name": "CASE_STATUS",
+									"type": "String"
+								},
+								"sink": {
+									"name": "case_status",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "OUTCOME",
+									"type": "String"
+								},
+								"sink": {
+									"name": "outcome",
+									"type": "String"
+								}
+							}
+						]
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "snowflakeTable_lawfirm",
+						"type": "DatasetReference",
+						"parameters": {
+							"tablename": "FACT_LEGALMATTERS"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "table_lawfirmTransData",
+						"type": "DatasetReference",
+						"parameters": {
+							"tableName": "fact_legalmatters"
+						}
+					}
+				]
+			},
+			{
+				"name": "Copy fact_payments",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SnowflakeV2Source",
+						"exportSettings": {
+							"type": "SnowflakeExportCopyCommand"
+						}
+					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false
+					},
+					"enableStaging": true,
+					"stagingSettings": {
+						"linkedServiceName": {
+							"referenceName": "stagingForLawFirm",
+							"type": "LinkedServiceReference"
+						},
+						"path": "staging-container"
+					},
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "MATTER_ID",
+									"type": "Int64"
+								},
+								"sink": {
+									"name": "matter_id",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"name": "CLIENT_ID",
+									"type": "Int64"
+								},
+								"sink": {
+									"name": "client_id",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"name": "AMOUNT",
+									"type": "Int64"
+								},
+								"sink": {
+									"name": "amount",
+									"type": "Decimal"
+								}
+							},
+							{
+								"source": {
+									"name": "PAYMENT_DATE",
+									"type": "DateTime"
+								},
+								"sink": {
+									"name": "payment_date",
+									"type": "DateTime"
+								}
+							}
+						]
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "snowflakeTable_lawfirm",
+						"type": "DatasetReference",
+						"parameters": {
+							"tablename": "FACT_PAYMENTS"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "table_lawfirmTransData",
+						"type": "DatasetReference",
+						"parameters": {
+							"tableName": "fact_payments"
+						}
+					}
+				]
+			},
+			{
+				"name": "Copy fact_billings",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SnowflakeV2Source",
+						"exportSettings": {
+							"type": "SnowflakeExportCopyCommand"
+						}
+					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false
+					},
+					"enableStaging": true,
+					"stagingSettings": {
+						"linkedServiceName": {
+							"referenceName": "stagingForLawFirm",
+							"type": "LinkedServiceReference"
+						},
+						"path": "staging-container"
+					},
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "MATTER_ID",
+									"type": "Int64"
+								},
+								"sink": {
+									"name": "matter_id",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"name": "CLIENT_ID",
+									"type": "Int64"
+								},
+								"sink": {
+									"name": "client_id",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"name": "INVOICE_AMOUNT",
+									"type": "Int64"
+								},
+								"sink": {
+									"name": "invoice_amount",
+									"type": "Decimal"
+								}
+							},
+							{
+								"source": {
+									"name": "INVOICE_DATE",
+									"type": "DateTime"
+								},
+								"sink": {
+									"name": "invoice_date",
+									"type": "DateTime"
+								}
+							},
+							{
+								"source": {
+									"name": "STATUS",
+									"type": "String"
+								},
+								"sink": {
+									"name": "status",
+									"type": "String"
+								}
+							}
+						]
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "snowflakeTable_lawfirm",
+						"type": "DatasetReference",
+						"parameters": {
+							"tablename": "FACT_BILLINGS"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "table_lawfirmTransData",
+						"type": "DatasetReference",
+						"parameters": {
+							"tableName": "fact_billings"
 						}
 					}
 				]
